@@ -1,9 +1,10 @@
 #include "EmpsvdCore.h"
 #include <Eigen/Dense>
 #include <cmath>
+#include <stdexcept>
 
 EmpsvdCore::EmpsvdCore(
-	Eigen::ArrayXd& x, Eigen::ArrayXd& y, unsigned int k, Eigen::ArrayXXd theta0,
+	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, unsigned int k, Eigen::ArrayXXd theta0,
 	unsigned int max_iter, double tol, bool fix_alpha, bool fix_ab
 )
 {
@@ -24,7 +25,7 @@ EmpsvdCore::EmpsvdCore(
 }
 
 EmpsvdCore::EmpsvdCore(
-	Eigen::ArrayXd& x, Eigen::ArrayXd& y, unsigned int k,
+	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, unsigned int k,
 	unsigned int max_iter, double tol, bool fix_alpha, bool fix_ab
 )
 {
@@ -91,13 +92,13 @@ double EmpsvdCore::get_loglikelihood()
 	return this->get_loglikelihood(this->theta);
 }
 
-double EmpsvdCore::get_loglikelihood(Eigen::ArrayXXd& const theta)
+double EmpsvdCore::get_loglikelihood(const Eigen::ArrayXXd& theta)
 {
 	return this->get_logsum_pxy(this->get_log_pxy(theta)).sum();
 }
 
 Eigen::ArrayXXd EmpsvdCore::make_theta0(
-	Eigen::ArrayXd& const x, Eigen::ArrayXd& const y, 
+	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, 
 	unsigned int const k, unsigned int const m
 )
 {
@@ -130,7 +131,7 @@ Eigen::ArrayXXd EmpsvdCore::make_theta0(
 	return theta0;
 }
 
-Eigen::ArrayXXd EmpsvdCore::calc_log_pxy(Eigen::ArrayXd& const x, Eigen::ArrayXd& const y, Eigen::ArrayXXd& const theta)
+Eigen::ArrayXXd EmpsvdCore::calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta)
 {
 	unsigned int const n = x.size();
 	unsigned int const k = theta.rows();
@@ -149,7 +150,7 @@ Eigen::ArrayXXd EmpsvdCore::calc_log_pxy(Eigen::ArrayXd& const x, Eigen::ArrayXd
 	return log_pxy;
 }
 
-Eigen::ArrayXXd EmpsvdCore::calc_pxy(Eigen::ArrayXd& const x, Eigen::ArrayXd& const y, Eigen::ArrayXXd& const theta)
+Eigen::ArrayXXd EmpsvdCore::calc_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta)
 {
 	return calc_log_pxy(x, y, theta).exp();
 }
@@ -194,7 +195,7 @@ Eigen::ArrayXXd EmpsvdCore::get_log_pxy()
 	return this->get_log_pxy(this->theta);
 }
 
-Eigen::ArrayXXd EmpsvdCore::get_log_pxy(Eigen::ArrayXXd& const theta)
+Eigen::ArrayXXd EmpsvdCore::get_log_pxy(const Eigen::ArrayXXd& theta)
 {
 	return this->calc_log_pxy(this->x, this->y, theta);
 }
@@ -204,7 +205,7 @@ Eigen::ArrayXXd EmpsvdCore::get_pxy()
 	return this->get_pxy(this->theta);
 }
 
-Eigen::ArrayXXd EmpsvdCore::get_pxy(Eigen::ArrayXXd& const theta)
+Eigen::ArrayXXd EmpsvdCore::get_pxy(const Eigen::ArrayXXd& theta)
 {
 	return this->calc_pxy(this->x, this->y, theta);
 }
@@ -239,7 +240,7 @@ Eigen::ArrayXXd EmpsvdCore::get_gamma()
 	return this->get_gamma(this->theta);
 }
 
-Eigen::ArrayXXd EmpsvdCore::get_gamma(Eigen::ArrayXXd& const theta)
+Eigen::ArrayXXd EmpsvdCore::get_gamma(const Eigen::ArrayXXd& theta)
 {
 	Eigen::ArrayXXd pxy = this->get_pxy(theta);
 	Eigen::ArrayXd sum_pxy = this->get_sum_pxy(pxy.log());

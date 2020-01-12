@@ -43,6 +43,9 @@
   <ItemGroup>
     <ClInclude Include="EmpsvdCore.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{a5b4d58a-386b-462f-8885-7d4c6cf938eb}</ProjectGuid>
     <Keyword>Linux</Keyword>
@@ -91,6 +94,9 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <RemoteBuildCommandLine>cmake CXX=/usr/local/src/gcc-4.9/bin/g++4.9 .&amp;&amp;make</RemoteBuildCommandLine>
+  </PropertyGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
