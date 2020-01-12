@@ -38,10 +38,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EMPSVD.cpp" />
+    <ClCompile Include="EmpsvdCore.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EMPSVD.h" />
+    <ClInclude Include="EmpsvdCore.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{a5b4d58a-386b-462f-8885-7d4c6cf938eb}</ProjectGuid>
