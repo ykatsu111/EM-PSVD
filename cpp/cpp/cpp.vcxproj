@@ -39,8 +39,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EmpsvdCore.cpp" />
+    <ClCompile Include="sample.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="csv.h" />
     <ClInclude Include="EmpsvdCore.h" />
   </ItemGroup>
   <ItemGroup>
@@ -95,7 +97,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <RemoteBuildCommandLine>cmake CXX=/usr/local/src/gcc-4.9/bin/g++4.9 .&amp;&amp;make</RemoteBuildCommandLine>
+    <RemoteBuildCommandLine>cmake3 CXX=/usr/local/src/gcc-4.9/bin/g++4.9 Eigen3_INCLUDE_DIRS=${HOME}/.local/include .&amp;&amp;make</RemoteBuildCommandLine>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -30,7 +30,21 @@ EmpsvdCore::EmpsvdCore(
 )
 {
 	Eigen::ArrayXXd theta = this->make_theta0(x, y, k, this->m);
-	EmpsvdCore(x, y, k, theta, max_iter, tol, fix_alpha, fix_ab);
+	// EmpsvdCore(x, y, k, theta, max_iter, tol, fix_alpha, fix_ab);
+	this->x = x;
+	this->y = y;
+	this->k = k;
+	this->theta = theta;
+
+	this->n = x.size();
+
+	this->max_iter = max_iter;
+	this->tol = tol;
+	this->fix_alpha = fix_alpha;
+	this->fix_ab = fix_ab;
+
+	// this must be after x, y, theta initialaze!
+	this->gamma = this->get_gamma();
 }
 
 EmpsvdCore::~EmpsvdCore()
@@ -163,7 +177,7 @@ double EmpsvdCore::digammad(double a)
 	double a1 = a - a2;
 
 	if (a1 != 0.) {
-		Eigen::ArrayXd c;
+		Eigen::ArrayXd c(6);
 		c << 0.64493313, -0.20203181, 0.08209433, -0.03591665, 0.01485925, -0.00472050;
 		// first, compute the digamma value for 0 < a < 1
 		dig = (a1 / (a1 + 1)) - g + std::pow(0.5 * a1, 7);
