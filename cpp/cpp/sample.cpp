@@ -18,10 +18,22 @@ int main() {
 		i++;
 	}
 
-	EmpsvdCore em(x, y, 2);
+	EmpsvdCore em(x, y, 3);
+	std::cout << "---Initial States---" << std::endl;
+	std::cout << "omega   a     b     sigma2     alpha(mu+1)    lambda" << std::endl;
 	std::cout << em.theta << std::endl;
+	std::cout << "Loglikelihood: " << em.get_loglikelihood() << std::endl;
+	std::cout << "AIC: " << em.get_aic() << std::endl;
+	std::cout << "BIC: " << em.get_bic() << std::endl;
+
 	em.fit();
+	std::cout << "---Fitting Result----" << std::endl;
+	std::cout << "omega   a     b     sigma2     alpha(mu+1)    lambda" << std::endl;
 	std::cout << em.theta << std::endl;
+	std::cout << "Loglikelihood: " << em.get_loglikelihood() << std::endl;
+	std::cout << "AIC: " << em.get_aic() << std::endl;
+	std::cout << "BIC: " << em.get_bic() << std::endl;
+	std::cout << "Total iteration: " << em.niter << std::endl;
 
 	return 0;
 }

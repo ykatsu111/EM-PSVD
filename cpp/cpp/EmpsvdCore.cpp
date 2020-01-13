@@ -2,48 +2,24 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <stdexcept>
+#include <cstddef>
 
 EmpsvdCore::EmpsvdCore(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, unsigned int k, Eigen::ArrayXXd theta0,
-	unsigned int max_iter, double tol, bool fix_alpha, bool fix_ab
-)
+	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k, Eigen::ArrayXXd theta0,
+	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
+) : x(x), y(y), k(k), theta(theta0), max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {
-	this->x = x;
-	this->y = y;
-	this->k = k;
-	this->theta = theta0;
-
-	this->n = x.size();
-
-	this->max_iter = max_iter;
-	this->tol = tol;
-	this->fix_alpha = fix_alpha;
-	this->fix_ab = fix_ab;
-
-	// this must be after x, y, theta initialaze!
+	this->check_init();
 	this->gamma = this->get_gamma();
 }
 
 EmpsvdCore::EmpsvdCore(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, unsigned int k,
-	unsigned int max_iter, double tol, bool fix_alpha, bool fix_ab
-)
+	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k,
+	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
+) : x(x), y(y), k(k), max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {
-	Eigen::ArrayXXd theta = this->make_theta0(x, y, k, this->m);
-	// EmpsvdCore(x, y, k, theta, max_iter, tol, fix_alpha, fix_ab);
-	this->x = x;
-	this->y = y;
-	this->k = k;
-	this->theta = theta;
-
-	this->n = x.size();
-
-	this->max_iter = max_iter;
-	this->tol = tol;
-	this->fix_alpha = fix_alpha;
-	this->fix_ab = fix_ab;
-
-	// this must be after x, y, theta initialaze!
+	this->theta = this->make_theta0(x, y, k, this->m);
+	this->check_init();
 	this->gamma = this->get_gamma();
 }
 
@@ -113,7 +89,7 @@ double EmpsvdCore::get_loglikelihood(const Eigen::ArrayXXd& theta)
 
 Eigen::ArrayXXd EmpsvdCore::make_theta0(
 	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, 
-	unsigned int const k, unsigned int const m
+	size_t const k, size_t const m
 )
 {
 	Eigen::ArrayXXd theta0(k, m);
@@ -147,8 +123,8 @@ Eigen::ArrayXXd EmpsvdCore::make_theta0(
 
 Eigen::ArrayXXd EmpsvdCore::calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta)
 {
-	unsigned int const n = x.size();
-	unsigned int const k = theta.rows();
+	size_t const n = x.size();
+	size_t const k = theta.rows();
 	Eigen::ArrayXXd log_pxy(n, k);
 
 	for (Eigen::Index ik = 0; ik < k; ik++) {
@@ -156,7 +132,7 @@ Eigen::ArrayXXd EmpsvdCore::calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::A
 			theta(ik, 0) * std::pow(theta(ik, 5), theta(ik, 4)) * x.pow(theta(ik, 4) - 1) /
 			(std::sqrt(2 * M_PI * theta(ik, 3)) * std::tgamma(theta(ik, 4)))
 			).log() - (
-			((y - (theta(ik, 1) * x.pow(theta(ik, 2)))).square() / (2 * theta(ik, 3))) -
+			((y - (theta(ik, 1) * x.pow(theta(ik, 2)))).square() / (2 * theta(ik, 3))) +
 				(theta(ik, 5) * x)
 				);
 	}
@@ -180,9 +156,9 @@ double EmpsvdCore::digammad(double a)
 		Eigen::ArrayXd c(6);
 		c << 0.64493313, -0.20203181, 0.08209433, -0.03591665, 0.01485925, -0.00472050;
 		// first, compute the digamma value for 0 < a < 1
-		dig = (a1 / (a1 + 1)) - g + std::pow(0.5 * a1, 7);
-		for (int i = 1; i < c.size(); i++) {
-			dig += c(i) * (std::pow(a1, i) - std::pow(a1, 7));
+		dig = (a1 / (a1 + 1)) - g + (0.5 * std::pow(a1, 7));
+		for (int i = 1; i <= c.size(); i++) {
+			dig += c(i-1) * (std::pow(a1, i) - std::pow(a1, 7));
 		}
 		dig -= 1 / a1;
 		// then, increment upto a >= 1
@@ -202,6 +178,12 @@ double EmpsvdCore::digammad(double a)
 		}
 	}
 	return dig;
+}
+
+void EmpsvdCore::check_init()
+{
+	if (x.size() != n || y.size() != n) throw std::logic_error("Mismatch size between x and y.");
+	if (theta.cols() != m) throw std::length_error("Column length of theta must be 6.");
 }
 
 Eigen::ArrayXXd EmpsvdCore::get_log_pxy()
@@ -273,8 +255,8 @@ double EmpsvdCore::get_new_omegak(Eigen::Index ik)
 
 double EmpsvdCore::get_new_ak(Eigen::Index ik, double new_bk)
 {
-	double q1 = (this->gamma.col(ik) * this->x * this->y).pow(new_bk).sum();
-	double q2 = (this->gamma.col(ik) * this->x).pow(2 * new_bk).sum();
+	double q1 = (this->gamma.col(ik) * this->y * this->x.pow(new_bk)).sum();
+	double q2 = (this->gamma.col(ik) * this->x.pow(2 * new_bk)).sum();
 	return q1 / q2;
 }
 
@@ -287,7 +269,7 @@ double EmpsvdCore::get_new_bk(Eigen::Index ik)
 	}
 	catch (const std::runtime_error&)
 	{
-		unsigned int const max_retry = 30;
+		size_t const max_retry = 30;
 		Eigen::ArrayXd bk1 = (Eigen::ArrayXd::Random(max_retry) + 1.0) * 0.5; // [0:1] random number
 		for (Eigen::Index i = 0; i < max_retry; i++) {
 			try
@@ -305,7 +287,7 @@ double EmpsvdCore::get_new_bk(Eigen::Index ik)
 
 double EmpsvdCore::get_new_sigma2k(Eigen::Index ik, double new_ak, double new_bk)
 {
-	double q1 = (this->gamma.col(ik) * (this->y - (new_ak * this->x).pow(new_bk)).square()).sum();
+	double q1 = (this->gamma.col(ik) * (this->y - (new_ak * this->x.pow(new_bk))).square()).sum();
 	double q2 = this->gamma.col(ik).sum();
 	return q1 / q2;
 }
@@ -327,11 +309,11 @@ double EmpsvdCore::bkdot(Eigen::Index ik, double bk)
 	double ak = this->get_new_ak(ik, bk);
 	return (
 		this->gamma.col(ik) * this->x.log() *
-		((this->y * this->x).pow(bk) - (ak * this->x).pow(2 * bk))
+		((this->y * this->x.pow(bk)) - (ak * this->x.pow(2 * bk)))
 		).sum();
 }
 
-double EmpsvdCore::get_new_bk_by_newton(Eigen::Index ik, double bk0, double bk1, unsigned int max_iter, double tol)
+double EmpsvdCore::get_new_bk_by_newton(Eigen::Index ik, double bk0, double bk1, size_t max_iter, double tol)
 {
 	double fbk0 = this->bkdot(ik, bk0);
 	double fbk1 = this->bkdot(ik, bk1);
@@ -351,7 +333,7 @@ double EmpsvdCore::get_new_bk_by_newton(Eigen::Index ik, double bk0, double bk1,
 	throw std::runtime_error("Failed to find optimal bk with newton method.");
 }
 
-double EmpsvdCore::get_new_alphak_by_invdigamma(Eigen::Index ik, double alphak0, unsigned int max_iter, double tol)
+double EmpsvdCore::get_new_alphak_by_invdigamma(Eigen::Index ik, double alphak0, size_t max_iter, double tol)
 {
 	double q1 = this->gamma.col(ik).sum();
 	double logx_mean = (this->gamma.col(ik) * this->x.log()).sum() / q1;

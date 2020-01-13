@@ -1,17 +1,28 @@
 #pragma once
 
 #include <Eigen/Dense>
+#include <cstddef>
 
 class EmpsvdCore
 {
 public:
+	const Eigen::ArrayXd x, y;
+	Eigen::ArrayXXd theta;
+	Eigen::ArrayXXd gamma;
+	const size_t k, n;
+	static const size_t m = 6;
+	const size_t max_iter;
+	size_t niter;
+	const double tol;
+	const bool fix_alpha, fix_ab;
+
 	EmpsvdCore(
-		const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, unsigned int k, Eigen::ArrayXXd theta0,
-		unsigned int max_iter=1000, double tol=1e-2, bool fix_alpha=false, bool fix_ab=false
+		const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k, Eigen::ArrayXXd theta0,
+		size_t max_iter=1000, double tol=1e-2, bool fix_alpha=false, bool fix_ab=false
 	);
 	EmpsvdCore(
-		const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, unsigned int k,
-		unsigned int max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
+		const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k,
+		size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 	);
 	~EmpsvdCore();
 
@@ -24,23 +35,15 @@ public:
 	double get_loglikelihood();
 	double get_loglikelihood(const Eigen::ArrayXXd& theta);
 
-	Eigen::ArrayXd x, y;
-	Eigen::ArrayXXd theta;
-	Eigen::ArrayXXd gamma;
-	unsigned int k, n;
-	static unsigned int const m = 6;
-	unsigned int max_iter, niter;
-	double tol;
-	bool fix_alpha, fix_ab;
-
 private:
 	static Eigen::ArrayXXd make_theta0(
 		const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, 
-		unsigned int const k, unsigned int const m
+		size_t const k, size_t const m
 	);
 	static Eigen::ArrayXXd calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta);
 	static Eigen::ArrayXXd calc_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta);
 	static double digammad(double a);
+	void check_init();
 	Eigen::ArrayXXd get_log_pxy();
 	Eigen::ArrayXXd get_log_pxy(const Eigen::ArrayXXd& theta);
 	Eigen::ArrayXXd get_pxy();
@@ -58,7 +61,7 @@ private:
 	double get_new_alphak(Eigen::Index ik);
 	double get_new_lambdak(Eigen::Index ik, double new_alphak);
 	double bkdot(Eigen::Index ik, double bk);
-	double get_new_bk_by_newton(Eigen::Index ik, double bk0, double bk1, unsigned int max_iter = 100, double tol = 1e-8);
-	double get_new_alphak_by_invdigamma(Eigen::Index ik, double alphak0, unsigned int max_iter = 500, double tol = 1e-2);
+	double get_new_bk_by_newton(Eigen::Index ik, double bk0, double bk1, size_t max_iter = 100, double tol = 1e-8);
+	double get_new_alphak_by_invdigamma(Eigen::Index ik, double alphak0, size_t max_iter = 500, double tol = 1e-2);
 };
 
