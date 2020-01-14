@@ -78,6 +78,7 @@
     <RemoteCCompileToolExe>/usr/local/src/gcc-4.9/bin/g++4.9</RemoteCCompileToolExe>
     <RemoteCppCompileToolExe>/usr/local/src/gcc-4.9/bin/g++4.9</RemoteCppCompileToolExe>
     <RemoteLdToolExe>/usr/local/src/gcc-4.9/bin/g++4.9</RemoteLdToolExe>
+    <IncludePath>./include</IncludePath>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Makefile" />
@@ -86,9 +87,11 @@
   <ItemGroup>
     <ClInclude Include="csv.h" />
     <ClInclude Include="EmpsvdCore.h" />
+    <ClInclude Include="PyEmpsvd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EmpsvdCore.cpp" />
+    <ClCompile Include="PyEmpsvd.cpp" />
     <ClCompile Include="sample.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
