@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <cstddef>
 
-EmpsvdCore::EmpsvdCore(
+Empsvd::EmpsvdCore::EmpsvdCore(
 	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k, Eigen::ArrayXXd theta0,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
 ) : x(x), y(y), k(k), theta(theta0), max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
@@ -13,7 +13,7 @@ EmpsvdCore::EmpsvdCore(
 	this->gamma = this->get_gamma();
 }
 
-EmpsvdCore::EmpsvdCore(
+Empsvd::EmpsvdCore::EmpsvdCore(
 	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
 ) : x(x), y(y), k(k), max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
@@ -23,11 +23,11 @@ EmpsvdCore::EmpsvdCore(
 	this->gamma = this->get_gamma();
 }
 
-EmpsvdCore::~EmpsvdCore()
+Empsvd::EmpsvdCore::~EmpsvdCore()
 {
 }
 
-void EmpsvdCore::fit()
+void Empsvd::EmpsvdCore::fit()
 {
 	double l1 = this->get_loglikelihood();
 	double l2;
@@ -44,12 +44,12 @@ void EmpsvdCore::fit()
 	throw std::runtime_error("Failed to converge EM algorithm.");
 }
 
-void EmpsvdCore::e_step()
+void Empsvd::EmpsvdCore::e_step()
 {
 	this->gamma = this->get_gamma();
 }
 
-void EmpsvdCore::m_step()
+void Empsvd::EmpsvdCore::m_step()
 {
 	for (Eigen::Index ik = 0; ik < this->k; ik++) {
 		if (!this->fix_ab) {
@@ -65,29 +65,29 @@ void EmpsvdCore::m_step()
 	}
 }
 
-double EmpsvdCore::get_aic()
+double Empsvd::EmpsvdCore::get_aic()
 {
 	double l = this->get_loglikelihood();
 	return l - (this->k * this->m);
 }
 
-double EmpsvdCore::get_bic()
+double Empsvd::EmpsvdCore::get_bic()
 {
 	double l = this->get_loglikelihood();
 	return l - (0.5 * this->k * this->m * std::log(this->n));
 }
 
-double EmpsvdCore::get_loglikelihood()
+double Empsvd::EmpsvdCore::get_loglikelihood()
 {
 	return this->get_loglikelihood(this->theta);
 }
 
-double EmpsvdCore::get_loglikelihood(const Eigen::ArrayXXd& theta)
+double Empsvd::EmpsvdCore::get_loglikelihood(const Eigen::ArrayXXd& theta)
 {
 	return this->get_logsum_pxy(this->get_log_pxy(theta)).sum();
 }
 
-Eigen::ArrayXXd EmpsvdCore::make_theta0(
+Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(
 	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, 
 	size_t const k, size_t const m
 )
@@ -121,7 +121,7 @@ Eigen::ArrayXXd EmpsvdCore::make_theta0(
 	return theta0;
 }
 
-Eigen::ArrayXXd EmpsvdCore::calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta)
+Eigen::ArrayXXd Empsvd::EmpsvdCore::calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta)
 {
 	size_t const n = x.size();
 	size_t const k = theta.rows();
@@ -140,12 +140,12 @@ Eigen::ArrayXXd EmpsvdCore::calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::A
 	return log_pxy;
 }
 
-Eigen::ArrayXXd EmpsvdCore::calc_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta)
+Eigen::ArrayXXd Empsvd::EmpsvdCore::calc_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta)
 {
 	return calc_log_pxy(x, y, theta).exp();
 }
 
-double EmpsvdCore::digammad(double a)
+double Empsvd::EmpsvdCore::digammad(double a)
 {
 	double const g = 0.57721566490153286061;
 	double dig;
@@ -180,38 +180,38 @@ double EmpsvdCore::digammad(double a)
 	return dig;
 }
 
-void EmpsvdCore::check_init()
+void Empsvd::EmpsvdCore::check_init()
 {
 	if (x.size() != n || y.size() != n) throw std::logic_error("Mismatch size between x and y.");
 	if (theta.cols() != m) throw std::length_error("Column length of theta must be 6.");
 }
 
-Eigen::ArrayXXd EmpsvdCore::get_log_pxy()
+Eigen::ArrayXXd Empsvd::EmpsvdCore::get_log_pxy()
 {
 	return this->get_log_pxy(this->theta);
 }
 
-Eigen::ArrayXXd EmpsvdCore::get_log_pxy(const Eigen::ArrayXXd& theta)
+Eigen::ArrayXXd Empsvd::EmpsvdCore::get_log_pxy(const Eigen::ArrayXXd& theta)
 {
 	return this->calc_log_pxy(this->x, this->y, theta);
 }
 
-Eigen::ArrayXXd EmpsvdCore::get_pxy()
+Eigen::ArrayXXd Empsvd::EmpsvdCore::get_pxy()
 {
 	return this->get_pxy(this->theta);
 }
 
-Eigen::ArrayXXd EmpsvdCore::get_pxy(const Eigen::ArrayXXd& theta)
+Eigen::ArrayXXd Empsvd::EmpsvdCore::get_pxy(const Eigen::ArrayXXd& theta)
 {
 	return this->calc_pxy(this->x, this->y, theta);
 }
 
-Eigen::ArrayXd EmpsvdCore::get_logsum_pxy()
+Eigen::ArrayXd Empsvd::EmpsvdCore::get_logsum_pxy()
 {
 	return this->get_logsum_pxy(this->get_log_pxy());
 }
 
-Eigen::ArrayXd EmpsvdCore::get_logsum_pxy(Eigen::ArrayXXd log_pxy)
+Eigen::ArrayXd Empsvd::EmpsvdCore::get_logsum_pxy(Eigen::ArrayXXd log_pxy)
 {
 	Eigen::ArrayXd max_log_pxy = log_pxy.rowwise().maxCoeff();
 
@@ -221,22 +221,22 @@ Eigen::ArrayXd EmpsvdCore::get_logsum_pxy(Eigen::ArrayXXd log_pxy)
 	return log_pxy.exp().rowwise().sum().log() + max_log_pxy;
 }
 
-Eigen::ArrayXd EmpsvdCore::get_sum_pxy()
+Eigen::ArrayXd Empsvd::EmpsvdCore::get_sum_pxy()
 {
 	return this->get_sum_pxy(this->get_log_pxy());
 }
 
-Eigen::ArrayXd EmpsvdCore::get_sum_pxy(Eigen::ArrayXXd log_pxy)
+Eigen::ArrayXd Empsvd::EmpsvdCore::get_sum_pxy(Eigen::ArrayXXd log_pxy)
 {
 	return this->get_logsum_pxy(log_pxy).exp();
 }
 
-Eigen::ArrayXXd EmpsvdCore::get_gamma()
+Eigen::ArrayXXd Empsvd::EmpsvdCore::get_gamma()
 {
 	return this->get_gamma(this->theta);
 }
 
-Eigen::ArrayXXd EmpsvdCore::get_gamma(const Eigen::ArrayXXd& theta)
+Eigen::ArrayXXd Empsvd::EmpsvdCore::get_gamma(const Eigen::ArrayXXd& theta)
 {
 	Eigen::ArrayXXd pxy = this->get_pxy(theta);
 	Eigen::ArrayXd sum_pxy = this->get_sum_pxy(pxy.log());
@@ -248,19 +248,19 @@ Eigen::ArrayXXd EmpsvdCore::get_gamma(const Eigen::ArrayXXd& theta)
 	return pxy;
 }
 
-double EmpsvdCore::get_new_omegak(Eigen::Index ik)
+double Empsvd::EmpsvdCore::get_new_omegak(Eigen::Index ik)
 {
 	return this->gamma.col(ik).sum() / this->n;
 }
 
-double EmpsvdCore::get_new_ak(Eigen::Index ik, double new_bk)
+double Empsvd::EmpsvdCore::get_new_ak(Eigen::Index ik, double new_bk)
 {
 	double q1 = (this->gamma.col(ik) * this->y * this->x.pow(new_bk)).sum();
 	double q2 = (this->gamma.col(ik) * this->x.pow(2 * new_bk)).sum();
 	return q1 / q2;
 }
 
-double EmpsvdCore::get_new_bk(Eigen::Index ik)
+double Empsvd::EmpsvdCore::get_new_bk(Eigen::Index ik)
 {
 	try
 	{
@@ -285,26 +285,26 @@ double EmpsvdCore::get_new_bk(Eigen::Index ik)
 	}
 }
 
-double EmpsvdCore::get_new_sigma2k(Eigen::Index ik, double new_ak, double new_bk)
+double Empsvd::EmpsvdCore::get_new_sigma2k(Eigen::Index ik, double new_ak, double new_bk)
 {
 	double q1 = (this->gamma.col(ik) * (this->y - (new_ak * this->x.pow(new_bk))).square()).sum();
 	double q2 = this->gamma.col(ik).sum();
 	return q1 / q2;
 }
 
-double EmpsvdCore::get_new_alphak(Eigen::Index ik)
+double Empsvd::EmpsvdCore::get_new_alphak(Eigen::Index ik)
 {
 	return this->get_new_alphak_by_invdigamma(ik, this->theta(ik, 4));
 }
 
-double EmpsvdCore::get_new_lambdak(Eigen::Index ik, double new_alphak)
+double Empsvd::EmpsvdCore::get_new_lambdak(Eigen::Index ik, double new_alphak)
 {
 	double q1 = this->gamma.col(ik).sum();
 	double q2 = (this->gamma.col(ik) * x).sum();
 	return new_alphak * q1 / q2;
 }
 
-double EmpsvdCore::bkdot(Eigen::Index ik, double bk)
+double Empsvd::EmpsvdCore::bkdot(Eigen::Index ik, double bk)
 {
 	double ak = this->get_new_ak(ik, bk);
 	return (
@@ -313,7 +313,7 @@ double EmpsvdCore::bkdot(Eigen::Index ik, double bk)
 		).sum();
 }
 
-double EmpsvdCore::get_new_bk_by_newton(Eigen::Index ik, double bk0, double bk1, size_t max_iter, double tol)
+double Empsvd::EmpsvdCore::get_new_bk_by_newton(Eigen::Index ik, double bk0, double bk1, size_t max_iter, double tol)
 {
 	double fbk0 = this->bkdot(ik, bk0);
 	double fbk1 = this->bkdot(ik, bk1);
@@ -333,7 +333,7 @@ double EmpsvdCore::get_new_bk_by_newton(Eigen::Index ik, double bk0, double bk1,
 	throw std::runtime_error("Failed to find optimal bk with newton method.");
 }
 
-double EmpsvdCore::get_new_alphak_by_invdigamma(Eigen::Index ik, double alphak0, size_t max_iter, double tol)
+double Empsvd::EmpsvdCore::get_new_alphak_by_invdigamma(Eigen::Index ik, double alphak0, size_t max_iter, double tol)
 {
 	double q1 = this->gamma.col(ik).sum();
 	double logx_mean = (this->gamma.col(ik) * this->x.log()).sum() / q1;
