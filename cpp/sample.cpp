@@ -18,7 +18,7 @@ int main() {
 		i++;
 	}
 
-	EmpsvdCore em(x, y, 3);
+	Empsvd::EmpsvdCore em(x, y, 3);
 	std::cout << "---Initial States---" << std::endl;
 	std::cout << "omega   a     b     sigma2     alpha(mu+1)    lambda" << std::endl;
 	std::cout << em.theta << std::endl;

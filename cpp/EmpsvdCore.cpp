@@ -5,7 +5,7 @@
 #include <cstddef>
 
 Empsvd::EmpsvdCore::EmpsvdCore(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k, Eigen::ArrayXXd theta0,
+	Eigen::ArrayXd x, Eigen::ArrayXd y, size_t k, Eigen::ArrayXXd theta0,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
 ) : x(x), y(y), k(k), theta(theta0), max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {
@@ -14,7 +14,7 @@ Empsvd::EmpsvdCore::EmpsvdCore(
 }
 
 Empsvd::EmpsvdCore::EmpsvdCore(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k,
+	Eigen::ArrayXd x, Eigen::ArrayXd y, size_t k,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
 ) : x(x), y(y), k(k), max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {

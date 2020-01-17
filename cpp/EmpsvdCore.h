@@ -20,11 +20,11 @@ namespace Empsvd {
 
 		// もしかして、参照渡しは危険？ユーザーが元のデータを消してるけどこのクラスオブジェクトが残っている状況がありそう？
 		EmpsvdCore(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k, Eigen::ArrayXXd theta0,
+			Eigen::ArrayXd x, Eigen::ArrayXd y, size_t k, Eigen::ArrayXXd theta0,
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 		EmpsvdCore(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k,
+			Eigen::ArrayXd x, Eigen::ArrayXd y, size_t k,
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 		~EmpsvdCore();
