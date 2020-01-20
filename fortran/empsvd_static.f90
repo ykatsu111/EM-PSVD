@@ -64,9 +64,12 @@ contains
   end subroutine get_rand
 
 
-  subroutine make_theta0(theta0)
+  subroutine make_theta0(N, K, x, y, theta0)
     implicit none
-    real(8), intent(out) :: theta0(K, M)
+    integer(8), parameter :: M = 6
+    integer(8), intent(in) :: N, K
+    real(8)   , intent(in) :: x(N), y(N)
+    real(8)   , intent(out) :: theta0(K, M)
     real(8) :: y_mean, y_var, x_mean, x_var, a_upp, a_low, nr, kr
     real(8) :: lins(K)
 
@@ -89,13 +92,13 @@ contains
     if ( K > 1 ) then
 
        call linspace(0d0, 1d0, K, lins)
-       theta0(:, 1) = exp( log(a_low) + (log(a_upp / a_low) * lins) ) ! a: the intercept parameter
-       theta0(:, 2) = lins ! b: the slope parameter
+       theta0(:, 2) = exp( log(a_low) + (log(a_upp / a_low) * lins) ) ! a: the intercept parameter
+       theta0(:, 3) = lins ! b: the slope parameter
 
     else
 
-       theta0(:, 1) = exp( log(a_upp * a_low) / 2d0 )
-       theta0(:, 2) = 0.5d0
+       theta0(:, 2) = exp( log(a_upp * a_low) / 2d0 )
+       theta0(:, 3) = 0.5d0
 
     end if
 

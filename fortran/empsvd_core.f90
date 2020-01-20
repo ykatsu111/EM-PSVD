@@ -12,7 +12,7 @@ module empsvd_core
   real(8), private :: tol_ = 1d-2
   integer(8), private :: max_iter_ = 1000
   logical, private :: fix_ab_ = .false.
-  logical, private :: fix_alpha_ = .true.
+  logical, private :: fix_alpha_ = .false.
 
   ! mandatory subroutine
   public :: init, fit, e_step, m_step
@@ -31,18 +31,13 @@ contains
     implicit none
     real(8)   , intent(in) :: x_in(:), y_in(:)
     integer(8), intent(in) :: k_in
-    real(8)   , intent(in), optional :: theta0(:, :)
+    real(8)   , intent(in), optional :: theta0(k_in, M)
     integer(8), intent(in), optional :: max_iter
     real(8)   , intent(in), optional :: tol
     logical   , intent(in), optional :: fix_alpha, fix_ab
     integer(8) :: shp(2)
 
     if ( size(x_in) /= size(y_in) ) call stop_with_error("data length of x and y must be same.")
-    if ( present(theta0) ) then
-       shp = shape(theta0)
-       if ( shp(1) /= k_in ) call stop_with_error("Invalid shape of theta0.")
-       if ( shp(2) /= M ) call stop_with_error("Invalid shape of theta0.")
-    end if
     
     if ( allocated(x) ) deallocate(x)
     if ( allocated(y) ) deallocate(y)
@@ -60,7 +55,7 @@ contains
     if ( present(max_iter) ) max_iter_ = max_iter
     if ( present(tol) ) tol_ = tol
     if ( present(fix_alpha) ) fix_alpha_ = fix_alpha
-    if ( present(fix_ab) ) fix_ab_ fix_ab
+    if ( present(fix_ab) ) fix_ab_ = fix_ab
 
     x = x_in
     y = y_in
@@ -68,7 +63,7 @@ contains
     if ( present(theta0) ) then
        theta = theta0
     else
-       call make_theta0(theta)
+       call make_theta0(N, K, x, y, theta)
     end if
        
     call calc_gamma(gamm)
