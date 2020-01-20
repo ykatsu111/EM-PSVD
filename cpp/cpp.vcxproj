@@ -81,18 +81,14 @@
     <IncludePath>./include</IncludePath>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Makefile" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="csv.h" />
     <ClInclude Include="EmpsvdCore.h" />
-    <ClInclude Include="PyEmpsvd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EmpsvdCore.cpp" />
     <ClCompile Include="PyEmpsvd.cpp" />
-    <ClCompile Include="sample.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

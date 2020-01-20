@@ -38,7 +38,6 @@ namespace Empsvd {
 		double get_loglikelihood();
 		double get_loglikelihood(const Eigen::ArrayXXd& theta);
 
-	private:
 		static Eigen::ArrayXXd make_theta0(
 			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y,
 			size_t const k, size_t const m
@@ -46,6 +45,8 @@ namespace Empsvd {
 		static Eigen::ArrayXXd calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta);
 		static Eigen::ArrayXXd calc_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta);
 		static double digammad(double a);
+
+	private:
 		void check_init();
 		Eigen::ArrayXXd get_log_pxy();
 		Eigen::ArrayXXd get_log_pxy(const Eigen::ArrayXXd& theta);
