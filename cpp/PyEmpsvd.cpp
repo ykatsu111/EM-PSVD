@@ -36,6 +36,5 @@ PYBIND11_MODULE(pyempsvd, mod) {
 		.def_static("make_theta0", &Empsvd::EmpsvdCore::make_theta0, py::arg("x"), py::arg("y"), py::arg("k"), py::arg("m"))
 		.def_static("calc_log_pxy", &Empsvd::EmpsvdCore::calc_log_pxy, py::arg("x"), py::arg("y"), py::arg("theta"))
 		.def_static("calc_pxy", &Empsvd::EmpsvdCore::calc_pxy, py::arg("x"), py::arg("y"), py::arg("theta"))
-		.def_static("digammad", &Empsvd::EmpsvdCore::digammad, py::arg("a"))
 		;
 }
