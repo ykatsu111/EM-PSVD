@@ -11,7 +11,7 @@ __description__ = "A fitting algorithm for PSVD data with the EM algorithm."
 __long_description__ = ""
 
 
-if os.environ("ENABLE_CXX") == "OFF":
+if os.environ["ENABLE_CXX"] == "OFF":
 
     setup(
         name="pyempsvd",
