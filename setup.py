@@ -1,7 +1,5 @@
-from setuptools import setup, Extension
-from setuptools.command.build_ext import build_ext
+from setuptools import setup
 import setuptools
-import pybind11
 import os
 
 
@@ -25,6 +23,10 @@ if os.environ["ENABLE_CXX"] == "OFF":
     )
 
 else:
+
+    from setuptools import Extension
+    from setuptools.command.build_ext import build_ext
+    import pybind11
 
     ext_modules = [
         Extension(
