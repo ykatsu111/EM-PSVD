@@ -30,7 +30,7 @@ class EmpsvdCore:
 
         self._n = x.size
         self._k = k  # scalar
-        self._m = M
+        self._m = self.M
         self._tol = tol
         self._max_iter = max_iter
         self._fix_ab = fix_ab
@@ -77,7 +77,7 @@ class EmpsvdCore:
     def tol(self) -> float:
         return self._tol
 
-    @propterty
+    @property
     def fix_alpha(self) -> bool:
         return self._fix_alpha
 
@@ -85,15 +85,15 @@ class EmpsvdCore:
     def fix_ab(self) -> bool:
         return self._fix_ab
 
-    def _fit(self) -> None:
+    def fit(self) -> None:
         """fit and estimate parameters"""
         l1 = self.get_loglikelihood()
         while 1:
-            if self._niter >= self._max_iter:
+            if self.niter >= self._max_iter:
                 raise RuntimeError("Failed to converge!")
             self.e_step()
             self.m_step()
-            self._niter += 1
+            self.niter += 1
             l2 = self.get_loglikelihood()
             if abs(l1 - l2) < self._tol:
                 return
@@ -109,25 +109,25 @@ class EmpsvdCore:
         """M-step"""
         for j in range(self.k):
             if not self._fix_ab:
-                self.theta[j, 2] = self._new_bk(j)
-                self.theta[j, 1] = self._new_ak(j, self.theta[j, 2])
+                self.theta[j, 2] = self._get_new_bk(j)
+                self.theta[j, 1] = self._get_new_ak(j, self.theta[j, 2])
 
-            self.theta[j, 3] = self._new_sk(j, self.theta[j, 1], self.theta[j, 2])
+            self.theta[j, 3] = self._get_new_sigma2k(j, self.theta[j, 1], self.theta[j, 2])
 
             if not self._fix_alpha:
-                self.theta[j, 4] = self._new_alk(j, self.theta[j, 4])
+                self.theta[j, 4] = self._get_new_alphak(j)
 
-            self.theta[j, 5] = self._new_lk(j, self.theta[j, 4])
-            self.theta[j, 0] = self._new_pk(j)
+            self.theta[j, 5] = self._get_new_lambdak(j, self.theta[j, 4])
+            self.theta[j, 0] = self._get_new_omegak(j)
 
         return
 
     def get_aic(self) -> float:
-        return self.get_loglikelihood - (self.k * self.m)
+        return self.get_loglikelihood() - (self.k * self.m)
 
     def get_bic(self) -> float:
         import numpy as np
-        return self.get_loglikelihood - (0.5 * self.k * self.m * np.log(self.n))
+        return self.get_loglikelihood() - (0.5 * self.k * self.m * np.log(self.n))
 
     def get_loglikelihood(self, theta=None) -> float:
         import numpy as np
@@ -137,6 +137,8 @@ class EmpsvdCore:
 
     @staticmethod
     def make_theta0(x, y, k):
+        import numpy as np
+
         theta = np.zeros([k, 6], dtype=x.dtype)
         d_mean, d_var = x.mean(), x.std() ** 2
         v_mean, v_var = y.mean(), y.std() ** 2
@@ -214,7 +216,7 @@ class EmpsvdCore:
     def _get_logsum_pxy(self, theta=None) -> ndarray:
         import numpy as np
 
-        log_pxy = self._log_pxy(theta=theta)
+        log_pxy = self._get_log_pxy(theta=theta)
         max_log_pxy = np.max(log_pxy, axis=1)
         for j in range(self.k):
             log_pxy[:, j] -= max_log_pxy
@@ -228,8 +230,8 @@ class EmpsvdCore:
         return np.exp(self._get_logsum_pxy(theta=theta))
 
     def _get_gamma(self, theta=None) -> ndarray:
-        gma = self._pxy(theta=theta)
-        sum_pxy = self._sum_pxy(theta=theta)
+        gma = self._get_pxy(theta=theta)
+        sum_pxy = self._get_sum_pxy(theta=theta)
         for j in range(self.k):
             gma[:, j] /= sum_pxy
         return gma
@@ -252,7 +254,7 @@ class EmpsvdCore:
         gammak = self.gamma[:, ik]
 
         def bkdot(bk):
-            ak = self._new_ak(gammak, bk)
+            ak = self._get_new_ak(ik, bk)
             q = gammak * np.log(self._x) * (
                 (self._y * self._x ** bk) - (ak * self._x ** (2 * bk))
             )
