@@ -1,4 +1,3 @@
-#include "PyEmpsvd.h"
 #include "EmpsvdCore.h"
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
@@ -34,44 +33,4 @@ PYBIND11_MODULE(pyempsvd, mod) {
 		.def_property_readonly_static("m", [](py::object) {return Empsvd::EmpsvdCore::m; })
 		.def_readwrite("niter", &Empsvd::EmpsvdCore::niter)
 		;
-}
-
-const Eigen::ArrayXd& Empsvd::PyEmpsvd::getX()
-{
-	return this->x;
-}
-
-const Eigen::ArrayXd& Empsvd::PyEmpsvd::getY()
-{
-	return this->y;
-}
-
-Eigen::ArrayXXd& Empsvd::PyEmpsvd::getTheta()
-{
-	return this->theta;
-}
-
-Eigen::ArrayXXd& Empsvd::PyEmpsvd::getGamma()
-{
-	return this->gamma;
-}
-
-size_t Empsvd::PyEmpsvd::getK()
-{
-	return this->k;
-}
-
-size_t Empsvd::PyEmpsvd::getN()
-{
-	return this->n;
-}
-
-size_t Empsvd::PyEmpsvd::getM()
-{
-	return this->m;
-}
-
-const size_t& Empsvd::PyEmpsvd::getNiter()
-{
-	return this->niter;
 }
