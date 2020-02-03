@@ -48,8 +48,8 @@ namespace Empsvd {
 	private:
 		static double digammad(double a);
 		void check_init();
-		Eigen::ArrayXXd get_log_pxy();
-		Eigen::ArrayXXd get_log_pxy(const Eigen::ArrayXXd& theta);
+		virtual Eigen::ArrayXXd get_log_pxy();
+		virtual Eigen::ArrayXXd get_log_pxy(const Eigen::ArrayXXd& theta);
 		Eigen::ArrayXXd get_pxy();
 		Eigen::ArrayXXd get_pxy(const Eigen::ArrayXXd& theta);
 		Eigen::ArrayXd get_logsum_pxy();
@@ -58,15 +58,15 @@ namespace Empsvd {
 		Eigen::ArrayXd get_sum_pxy(Eigen::ArrayXXd log_pxy);
 		Eigen::ArrayXXd get_gamma();
 		Eigen::ArrayXXd get_gamma(const Eigen::ArrayXXd& theta);
-		double get_new_omegak(Eigen::Index ik);
-		double get_new_ak(Eigen::Index ik, double new_bk);
+		virtual double get_new_omegak(Eigen::Index ik);
+		virtual double get_new_ak(Eigen::Index ik, double new_bk);
 		double get_new_bk(Eigen::Index ik);
-		double get_new_sigma2k(Eigen::Index ik, double new_ak, double new_bk);
+		virtual double get_new_sigma2k(Eigen::Index ik, double new_ak, double new_bk);
 		double get_new_alphak(Eigen::Index ik);
-		double get_new_lambdak(Eigen::Index ik, double new_alphak);
-		double bkdot(Eigen::Index ik, double bk);
+		virtual double get_new_lambdak(Eigen::Index ik, double new_alphak);
+		virtual double bkdot(Eigen::Index ik, double bk);
 		double get_new_bk_by_newton(Eigen::Index ik, double bk0, double bk1, size_t max_iter = 100, double tol = 1e-8);
-		double get_new_alphak_by_invdigamma(Eigen::Index ik, double alphak0, size_t max_iter = 500, double tol = 1e-2);
+		virtual double get_new_alphak_by_invdigamma(Eigen::Index ik, double alphak0, size_t max_iter = 500, double tol = 1e-2);
 	};
 
 }
