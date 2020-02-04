@@ -12,24 +12,24 @@ namespace Empsvd {
 		const Eigen::ArrayXd z;
 
 		EmpsvdBinCore(
-			Eigen::ArrayXXd x, Eigen::ArrayXXd y, Eigen::ArrayXXd z, size_t k, Eigen::ArrayXXd theta0,
+			Eigen::ArrayXd x, Eigen::ArrayXd y, Eigen::ArrayXd z, size_t k, Eigen::ArrayXXd theta0,
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 		EmpsvdBinCore(
-			Eigen::ArrayXXd x, Eigen::ArrayXXd y, Eigen::ArrayXXd z, size_t k,
+			Eigen::ArrayXd x, Eigen::ArrayXd y, Eigen::ArrayXd z, size_t k,
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 
 		static Eigen::ArrayXXd make_theta0(
-			const Eigen::ArrayXXd& x, const Eigen::ArrayXXd& y, const Eigen::ArrayXXd& z,
+			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z,
 			size_t const k, size_t const m
 		);
 		static Eigen::ArrayXXd calc_log_pxy(
-			const Eigen::ArrayXXd& x, const Eigen::ArrayXXd& y, const Eigen::ArrayXXd& z,
+			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z,
 			const Eigen::ArrayXXd& theta
 		);
 		static Eigen::ArrayXXd calc_pxy(
-			const Eigen::ArrayXXd& x, const Eigen::ArrayXXd& y, const Eigen::ArrayXXd& z,
+			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z,
 			const Eigen::ArrayXXd& theta
 		);
 
