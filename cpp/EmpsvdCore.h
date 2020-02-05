@@ -45,7 +45,7 @@ namespace Empsvd {
 		static Eigen::ArrayXXd calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta);
 		static Eigen::ArrayXXd calc_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta);
 
-	private:
+	protected:
 		static double digammad(double a);
 		void check_init();
 		Eigen::ArrayXXd get_log_pxy();

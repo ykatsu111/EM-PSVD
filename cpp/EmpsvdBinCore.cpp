@@ -1,4 +1,5 @@
 #include "EmpsvdBinCore.h"
+#include "EmpsvdCore.h"
 #include <Eigen/Dense>
 #include <cmath>
 #include <stdexcept>
@@ -64,7 +65,11 @@ Eigen::ArrayXXd Empsvd::EmpsvdBinCore::make_theta0(
 
 Eigen::ArrayXXd Empsvd::EmpsvdBinCore::get_gamma(const Eigen::ArrayXXd& theta)
 {
-	return Empsvd::EmpsvdCore::get_gamma(theta) * this->z;
+        Eigen::ArrayXXd ga = Empsvd::EmpsvdCore::get_gamma(theta);
+	for (Eigen::Index ik = 0; ik < this->k; ik++) {
+		ga.col(ik) += this->z;
+	}
+	return ga;
 }
 
 
