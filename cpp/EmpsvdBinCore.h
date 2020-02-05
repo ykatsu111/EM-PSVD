@@ -20,28 +20,16 @@ namespace Empsvd {
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 
+		double get_loglikelihood(const Eigen::ArrayXXd& theta) override;
+
 		static Eigen::ArrayXXd make_theta0(
 			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z,
 			size_t const k, size_t const m
-		);
-		static Eigen::ArrayXXd calc_log_pxy(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z,
-			const Eigen::ArrayXXd& theta
-		);
-		static Eigen::ArrayXXd calc_pxy(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z,
-			const Eigen::ArrayXXd& theta
-		);
+		);		
 
 	private:
-		Eigen::ArrayXXd get_log_pxy() override;
-		Eigen::ArrayXXd Empsvd::EmpsvdCore::get_log_pxy(const Eigen::ArrayXXd& theta) override;
-		double get_new_omegak(Eigen::Index ik) override;
-		double get_new_ak(Eigen::Index ik, double new_bk) override;
-		double get_new_sigma2k(Eigen::Index ik, double new_ak, double new_bk) override;
-		double get_new_lambdak(Eigen::Index ik, double new_alphak) override;
-		double bkdot(Eigen::Index ik, double bk) override;
-		double get_new_alphak_by_invdigamma(Eigen::Index ik, double alphak0, size_t max_iter = 500, double tol = 1e-2) override;
+		Eigen::ArrayXXd get_gamma(const Eigen::ArrayXXd& theta) override;
+
 	};
 
 }

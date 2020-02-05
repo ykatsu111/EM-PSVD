@@ -18,6 +18,11 @@ Empsvd::EmpsvdBinCore::EmpsvdBinCore(
 {
 }
 
+double Empsvd::EmpsvdBinCore::get_loglikelihood(const Eigen::ArrayXXd& theta)
+{
+	return (this->get_logsum_pxy(this->get_log_pxy(theta)) * this->z).sum();
+}
+
 Eigen::ArrayXXd Empsvd::EmpsvdBinCore::make_theta0(
 	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, 
 	size_t const k, size_t const m
@@ -57,30 +62,9 @@ Eigen::ArrayXXd Empsvd::EmpsvdBinCore::make_theta0(
 	return theta0;
 }
 
-Eigen::ArrayXXd Empsvd::EmpsvdBinCore::calc_log_pxy(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, const Eigen::ArrayXXd& theta
-)
+Eigen::ArrayXXd Empsvd::EmpsvdBinCore::get_gamma(const Eigen::ArrayXXd& theta)
 {
-	Eigen::ArrayXXd log_pxy = calc_log_pxy(x, y, theta);
-	for (Eigen::Index ik = 0; ik < theta.rows(); ik++) {
-		log_pxy *= z;
-	}
-	return log_pxy;
+	return Empsvd::EmpsvdCore::get_gamma(theta) * this->z;
 }
 
-Eigen::ArrayXXd Empsvd::EmpsvdBinCore::calc_pxy(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, const Eigen::ArrayXXd& theta
-)
-{
-	return calc_log_pxy(x, y, z, theta).exp();
-}
 
-Eigen::ArrayXXd Empsvd::EmpsvdBinCore::get_log_pxy()
-{
-	return this->get_log_pxy(this->theta);
-}
-
-Eigen::ArrayXXd Empsvd::EmpsvdCore::get_log_pxy(const Eigen::ArrayXXd& theta)
-{
-	return this->calc_log_pxy(this->x, this->y, this->z, theta);
-}
