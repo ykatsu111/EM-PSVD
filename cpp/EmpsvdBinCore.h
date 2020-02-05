@@ -31,6 +31,7 @@ namespace Empsvd {
 	protected:
 		using EmpsvdCore::get_gamma;
 		Eigen::ArrayXXd get_gamma(const Eigen::ArrayXXd& theta) override;
+		double get_new_omegak(Eigen::Index ik) override;
 
 	};
 

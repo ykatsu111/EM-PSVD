@@ -58,7 +58,7 @@ namespace Empsvd {
 		Eigen::ArrayXd get_sum_pxy(Eigen::ArrayXXd log_pxy);
 		Eigen::ArrayXXd get_gamma();
 		virtual Eigen::ArrayXXd get_gamma(const Eigen::ArrayXXd& theta);
-		double get_new_omegak(Eigen::Index ik);
+		virtual double get_new_omegak(Eigen::Index ik);
 		double get_new_ak(Eigen::Index ik, double new_bk);
 		double get_new_bk(Eigen::Index ik);
 		double get_new_sigma2k(Eigen::Index ik, double new_ak, double new_bk);

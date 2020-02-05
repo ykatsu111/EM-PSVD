@@ -72,4 +72,9 @@ Eigen::ArrayXXd Empsvd::EmpsvdBinCore::get_gamma(const Eigen::ArrayXXd& theta)
 	return ga;
 }
 
+double Empsvd::EmpsvdBinCore::get_new_omegak(Eigen::Index ik)
+{
+	return this->gamma.col(ik).sum() / this->z.sum();
+}
+
 
