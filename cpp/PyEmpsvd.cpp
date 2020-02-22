@@ -1,4 +1,5 @@
 #include "EmpsvdCore.h"
+#include "EmpsvdBinCore.h"
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
 #include <cstddef>
@@ -9,7 +10,7 @@ namespace py = pybind11;
 PYBIND11_MODULE(pyempsvd, mod) {
 	mod.doc() = "EM-PSVD module implimented by C++11";
 
-	py::class_<Empsvd::EmpsvdCore>(mod, "Empsvd")
+	py::class_<Empsvd::EmpsvdCore>(mod, "EmpsvdCore")
 		.def(py::init<Eigen::ArrayXd, Eigen::ArrayXd, size_t, Eigen::ArrayXd, size_t, double, bool, bool>(),
 			py::arg("x"), py::arg("y"), py::arg("k"), py::arg("theta0"),
 			py::arg("max_iter") = 1000, py::arg("tol") = 1e-2, py::arg("fix_alpha") = false, py::arg("fix_ab") = false)
@@ -36,5 +37,19 @@ PYBIND11_MODULE(pyempsvd, mod) {
 		.def_static("make_theta0", &Empsvd::EmpsvdCore::make_theta0, py::arg("x"), py::arg("y"), py::arg("k"), py::arg("m"))
 		.def_static("calc_log_pxy", &Empsvd::EmpsvdCore::calc_log_pxy, py::arg("x"), py::arg("y"), py::arg("theta"))
 		.def_static("calc_pxy", &Empsvd::EmpsvdCore::calc_pxy, py::arg("x"), py::arg("y"), py::arg("theta"))
+		;
+
+	py::class_<Empsvd::EmpsvdBinCore, Empsvd::EmpsvdCore>(mod, "EmpsvdBinCore")
+		.def(py::init<Eigen::ArrayXd, Eigen::ArrayXd, Eigen::ArrayXd, size_t, Eigen::ArrayXd, size_t, double, bool, bool>(),
+			py::arg("x"), py::arg("y"), py::arg("z"), py::arg("k"), py::arg("theta0"),
+			py::arg("max_iter") = 1000, py::arg("tol") = 1e-2, py::arg("fix_alpha") = false, py::arg("fix_ab") = false)
+		.def(py::init<Eigen::ArrayXd, Eigen::ArrayXd, Eigen::ArrayXd, size_t, size_t, double, bool, bool>(),
+			py::arg("x"), py::arg("y"), py::arg("z"), py::arg("k"),
+			py::arg("max_iter") = 1000, py::arg("tol") = 1e-2, py::arg("fix_alpha") = false, py::arg("fix_ab") = false)
+		.def("get_loglikelihood", (double (Empsvd::EmpsvdCore::*)(const Eigen::ArrayXXd&)) & Empsvd::EmpsvdCore::get_loglikelihood, py::arg("theta"))
+
+		.def_readonly("z", &Empsvd::EmpsvdCore::z)
+
+		.def_static("make_theta0", &Empsvd::EmpsvdCore::make_theta0, py::arg("x"), py::arg("y"), py::arg("z"), py::arg("k"), py::arg("m"))
 		;
 }
