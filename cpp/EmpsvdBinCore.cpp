@@ -10,6 +10,7 @@ Empsvd::EmpsvdBinCore::EmpsvdBinCore(
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
 ) : Empsvd::EmpsvdCore(x, y, k, theta0,	max_iter, tol, fix_alpha, fix_ab), z(z)
 {
+  this->gamma = this->get_gamma(this->theta);
 }
 
 Empsvd::EmpsvdBinCore::EmpsvdBinCore(
@@ -17,6 +18,7 @@ Empsvd::EmpsvdBinCore::EmpsvdBinCore(
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
 ) : Empsvd::EmpsvdCore(x, y, k, this->make_theta0(x, y, z, k, this->m),	max_iter, tol, fix_alpha, fix_ab), z(z)
 {
+  this->gamma = this->get_gamma(this->theta);
 }
 
 double Empsvd::EmpsvdBinCore::get_loglikelihood(const Eigen::ArrayXXd& theta)
@@ -67,7 +69,7 @@ Eigen::ArrayXXd Empsvd::EmpsvdBinCore::get_gamma(const Eigen::ArrayXXd& theta)
 {
         Eigen::ArrayXXd ga = Empsvd::EmpsvdCore::get_gamma(theta);
 	for (Eigen::Index ik = 0; ik < this->k; ik++) {
-		ga.col(ik) += this->z;
+		ga.col(ik) *= this->z;
 	}
 	return ga;
 }

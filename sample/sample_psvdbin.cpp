@@ -4,7 +4,7 @@
 #include <Eigen/Dense>
 
 constexpr int COLUMNS = 3;
-constexpr int ROWS = 60 * 40;
+constexpr int ROWS = 100 * 60;
 
 int main() {
 	io::CSVReader<COLUMNS> in("psvdbin.csv");
