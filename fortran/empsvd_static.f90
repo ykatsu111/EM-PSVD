@@ -7,7 +7,8 @@ module empsvd_static
   public :: alky, calc_new_alk_by_invdigamma
   public :: calc_new_lk
 
-  public :: stop_with_error, linspace, get_rand, make_theta0
+  public :: stop_with_error, linspace, get_rand
+  public :: make_theta0, make_theta0_bin
 
   real(8), public, parameter :: pi = 3.1415926535897932384626433832795
 
@@ -103,6 +104,47 @@ contains
     end if
 
   end subroutine make_theta0
+
+
+  subroutine make_theta0_bin(N, K, x, y, z, theta0)
+    implicit none
+    integer(8), parameter :: M = 6
+    integer(8), intent(in) :: N, K
+    real(8)   , intent(in) :: x(N), y(N), z(N)
+    real(8)   , intent(out) :: theta0(K, M)
+    real(8) :: y_mean, y_var, x_mean, x_var, a_upp, a_low, nr, kr
+    real(8) :: lins(K)
+
+    nr = sum(z)
+    kr = real(K)
+
+    y_mean = sum(y * z) / nr
+    y_var = sum( ((y - y_mean) ** 2) * z ) / nr
+    x_mean = sum(x * z) / nr
+    x_var = sum( ((x - x_mean) ** 2) * z ) / nr
+
+    theta0(:, 1) = 1d0 / kr                 ! omega  : mixing fraction
+    theta0(:, 4) = y_var                    ! sigma^2: variance of terminal velocity
+    theta0(:, 5) = (x_mean ** 2) / x_var    ! alpha  : the shape parameter + 1
+    theta0(:, 6) = x_mean / x_var           ! lambda : the slope parameter
+
+    a_upp = maxval(y, mask=z>0.) / x_mean
+    a_low = y_mean / 4d0
+
+    if ( K > 1 ) then
+
+       call linspace(0d0, 1d0, K, lins)
+       theta0(:, 2) = exp( log(a_low) + (log(a_upp / a_low) * lins) ) ! a: the intercept parameter
+       theta0(:, 3) = lins ! b: the slope parameter
+
+    else
+
+       theta0(:, 2) = exp( log(a_upp * a_low) / 2d0 )
+       theta0(:, 3) = 0.5d0
+
+    end if
+
+  end subroutine make_theta0_bin
 
 
   subroutine calc_log_pxy(x, y, theta, log_pxy)

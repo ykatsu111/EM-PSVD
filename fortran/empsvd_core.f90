@@ -3,25 +3,29 @@ module empsvd_core
   
   ! mandatory variables to be initialize by init subroutine
   real(8)   , protected, allocatable :: x(:), y(:)
-  real(8)   , protected, allocatable :: theta(:, :)
-  real(8)   , protected, allocatable :: gamm(:, :)
   integer(8), protected              :: N, K
   integer(8), public   , parameter   :: M = 6
-  integer(8), protected              :: niter = 0
+  ! only for empsvd_bin_core; Do not change these variables from outside
+  real(8)   , public   , allocatable :: theta(:, :)
+  real(8)   , public   , allocatable :: gamm(:, :)
+  integer(8), public                 :: niter = 0
 
-  real(8), private :: tol_ = 1d-2
-  integer(8), private :: max_iter_ = 1000
-  logical, private :: fix_ab_ = .false.
-  logical, private :: fix_alpha_ = .false.
+  real(8)   , protected :: tol_ = 1d-2
+  integer(8), protected :: max_iter_ = 1000
+  logical   , protected :: fix_ab_ = .false.
+  logical   , protected :: fix_alpha_ = .false.
 
   ! mandatory subroutine
   public :: init, fit, e_step, m_step
   ! optional subroutine
   public :: get_loglikelihood, get_aic, get_bic
 
-  private :: calc_new_pk, calc_new_ak, calc_new_bk, calc_new_sk, calc_new_lk
-  private :: calc_log_pxy, calc_pxy, calc_logsum_pxy, calc_sum_pxy, calc_loglikelihood
+  private :: calc_new_pk
+  private :: calc_log_pxy, calc_pxy, calc_sum_pxy, calc_loglikelihood
 
+  ! only for empsvd_bin_core; Do not call these subroutines from outside
+  public :: calc_logsum_pxy , calc_gamma
+  public :: calc_new_ak, calc_new_bk, calc_new_sk, calc_new_lk
 
 contains
 
