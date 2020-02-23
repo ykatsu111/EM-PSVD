@@ -2,35 +2,31 @@ module empsvd_core
   implicit none
   
   ! mandatory variables to be initialize by init subroutine
-  real(8)   , protected, allocatable :: x(:), y(:)
+  real(8)   , protected, allocatable :: x(:), y(:), z(:)
+  real(8)   , protected, allocatable :: theta(:, :)
+  real(8)   , protected, allocatable :: gamm(:, :)
   integer(8), protected              :: N, K
   integer(8), public   , parameter   :: M = 6
-  ! only for empsvd_bin_core; Do not change these variables from outside
-  real(8)   , public   , allocatable :: theta(:, :)
-  real(8)   , public   , allocatable :: gamm(:, :)
-  integer(8), public                 :: niter = 0
+  integer(8), protected              :: niter = 0
 
-  real(8)   , protected :: tol_ = 1d-2
-  integer(8), protected :: max_iter_ = 1000
-  logical   , protected :: fix_ab_ = .false.
-  logical   , protected :: fix_alpha_ = .false.
+  real(8)   , private :: tol_ = 1d-2
+  integer(8), private :: max_iter_ = 1000
+  logical   , private :: fix_ab_ = .false.
+  logical   , private :: fix_alpha_ = .false.
 
   ! mandatory subroutine
   public :: init, fit, e_step, m_step
   ! optional subroutine
   public :: get_loglikelihood, get_aic, get_bic
 
-  private :: calc_new_pk
-  private :: calc_log_pxy, calc_pxy, calc_sum_pxy, calc_loglikelihood
+  private :: calc_new_pk, calc_new_ak, calc_new_bk, calc_new_sk, calc_new_lk
+  private :: calc_log_pxy, calc_pxy, calc_logsum_pxy, calc_sum_pxy, calc_loglikelihood, calc_gamma
 
-  ! only for empsvd_bin_core; Do not call these subroutines from outside
-  public :: calc_logsum_pxy , calc_gamma
-  public :: calc_new_ak, calc_new_bk, calc_new_sk, calc_new_lk
 
 contains
 
 
-  subroutine init(x_in, y_in, k_in, theta0, max_iter, tol, fix_alpha, fix_ab)
+  subroutine init(x_in, y_in, k_in, theta0, max_iter, tol, fix_alpha, fix_ab, weight)
     use empsvd_static, only: stop_with_error, make_theta0
     implicit none
     real(8)   , intent(in) :: x_in(:), y_in(:)
@@ -39,12 +35,17 @@ contains
     integer(8), intent(in), optional :: max_iter
     real(8)   , intent(in), optional :: tol
     logical   , intent(in), optional :: fix_alpha, fix_ab
+    real(8)   , intent(in), optional :: weight(:)
     integer(8) :: shp(2)
 
-    if ( size(x_in) /= size(y_in) ) call stop_with_error("data length of x and y must be same.")
+    if ( size(x_in) /= size(y_in)) call stop_with_error("data length of x and y must be same.")
+    if ( present(weight) ) then
+       if ( size(x_in) /= size(weight) ) call stop_with_error("length of z must be same as that of x.")
+    end if
     
     if ( allocated(x) ) deallocate(x)
     if ( allocated(y) ) deallocate(y)
+    if ( allocated(z) ) deallocate(z)
     if ( allocated(theta) ) deallocate(theta)
     if ( allocated(gamm) ) deallocate(gamm)
 
@@ -53,6 +54,7 @@ contains
 
     allocate( x(N) ) 
     allocate( y(N) )
+    allocate( z(N) )
     allocate( theta(K, M) )
     allocate( gamm(N, K) )
 
@@ -63,11 +65,13 @@ contains
 
     x = x_in
     y = y_in
+    z = 1.
+    if ( present(weight) ) z = weight
 
     if ( present(theta0) ) then
        theta = theta0
     else
-       call make_theta0(N, K, x, y, theta)
+       call make_theta0(N, K, x, y, z, theta)
     end if
        
     call calc_gamma(gamm)
@@ -226,7 +230,7 @@ contains
        call calc_logsum_pxy(logsum_pxy)
     end if
 
-    loglikelihood = sum( logsum_pxy )
+    loglikelihood = sum( z * logsum_pxy )
 
   end subroutine calc_loglikelihood
 
@@ -293,7 +297,7 @@ contains
     real(8), intent(in)  :: gammak(N)
     real(8), intent(out) :: new_pk
 
-    new_pk = sum( gammak ) / real(N)
+    new_pk = sum( z * gammak ) / sum(z)
 
   end subroutine calc_new_pk
 
@@ -305,7 +309,7 @@ contains
     real(8), intent(in)  :: bk
     real(8), intent(out) :: new_ak
 
-    call calc_new_ak_(bk, x, y, gammak, new_ak)
+    call calc_new_ak_(bk, x, y, z, gammak, new_ak)
     
   end subroutine calc_new_ak
 
@@ -320,13 +324,13 @@ contains
     real(8)    :: bk1(retry)
     integer(8) :: i
 
-    call calc_new_bk_by_newton(old_bk, x, y, gammak, new_bk, info)
+    call calc_new_bk_by_newton(old_bk, x, y, z, gammak, new_bk, info)
     if ( info /= 0) then
 
        call get_rand(bk1)
        do i = 1, retry
 !          write(*, "(A,f0.2)") "new_bk: retry from another bk1 ", old_bk + bk1(i)
-          call calc_new_bk_by_newton(old_bk, x, y, gammak, new_bk, info, bk1(i))
+          call calc_new_bk_by_newton(old_bk, x, y, z, gammak, new_bk, info, bk1(i))
 
           if ( info == 0 ) return
        end do
@@ -342,8 +346,8 @@ contains
     real(8), intent(out) :: new_sk
     real(8) :: q1, q2
 
-    q1 = sum( gammak * (y - (ak * x ** bk)) ** 2 )
-    q2 = sum( gammak )
+    q1 = sum( z * gammak * (y - (ak * x ** bk)) ** 2 )
+    q2 = sum( z * gammak )
     new_sk = q1 / q2
     
   end subroutine calc_new_sk
@@ -357,7 +361,7 @@ contains
     real(8), intent(out) :: new_alk
     integer(8), intent(out) :: info
 
-    call calc_new_alk_by_invdigamma(old_alk, x, gammak, new_alk, info)
+    call calc_new_alk_by_invdigamma(old_alk, x, z, gammak, new_alk, info)
 
   end subroutine calc_new_alk
 
@@ -368,7 +372,7 @@ contains
     real(8), intent(in)  :: gammak(N), alk
     real(8), intent(out) :: new_lk
     
-    call calc_new_lk_(alk, x, gammak, new_lk)
+    call calc_new_lk_(alk, x, z, gammak, new_lk)
 
   end subroutine calc_new_lk
 

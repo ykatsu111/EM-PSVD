@@ -7,7 +7,7 @@ constexpr int COLUMNS = 3;
 constexpr int ROWS = 100 * 60;
 
 int main() {
-	io::CSVReader<COLUMNS> in("psvdbin.csv");
+	io::CSVReader<COLUMNS> in("psvd_bin.csv");
 	Eigen::ArrayXd x(ROWS), y(ROWS), z(ROWS);
 	double xi, yi, zi;
 	Eigen::Index i = 0;
