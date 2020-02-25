@@ -1,8 +1,8 @@
 program main
-  use empsvd_core, only: init, fit, theta, M
+  use empsvd_core, only: init, fit, theta, M, niter, get_loglikelihood, get_aic, get_bic
   implicit none
   integer(8), parameter :: N=900, K=2, max_iter=1000
-  real(8) :: x(N), y(N)
+  real(8) :: x(N), y(N), r
   integer(8) :: i, info
 
   ! read data and parameters
@@ -12,22 +12,37 @@ program main
   end do
   close(10)
   
-  ! EM Fitting
+  ! print initial condition
   call init(x, y, K, max_iter=max_iter, tol=1d-5)
   write(*, "(A)") "----initial condition----"
   do i = 1, K
      write(*, "(A,I0,A,6F15.5,A))") "theta(", i, ")=(", theta(i, :), ")"
   end do
+  call get_loglikelihood(r)
+  write(*, "(A,F15.5)") "log-likelihood: ", r
+  call get_aic(r)
+  write(*, "(A,F15.5)") "           aic: ", r
+  call get_bic(r)
+  write(*, "(A,F15.5)") "           bic: ", r
+
+  ! fitting
   call fit(info)
+  if ( info /= 0 ) then
+     write(*, "(A)") "Failed to converge!"
+     stop 99
+  end if
 
   ! print result
   write(*, "(A)") "----Fitting result----"
-  if ( info == 0 ) then
-     do i = 1, K
-        write(*, "(A,I0,A,6F15.5,A))") "theta(", i, ")=(", theta(i, :), ")"
-     end do
-  else
-     write(*, "(A)") "Failed to converge!"
-  end if
+  do i = 1, K
+     write(*, "(A,I0,A,6F15.5,A))") "theta(", i, ")=(", theta(i, :), ")"
+  end do
+  write(*, "(A,I0)") "number of iteration: ", niter
+  call get_loglikelihood(r)
+  write(*, "(A,F15.5)") "log-likelihood: ", r
+  call get_aic(r)
+  write(*, "(A,F15.5)") "           aic: ", r
+  call get_bic(r)
+  write(*, "(A,F15.5)") "           bic: ", r
   
 end program main
