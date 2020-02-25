@@ -1,4 +1,4 @@
-#include "EmpsvdBinCore.h"
+#include "EmpsvdCore.h"
 #include "csv.h"
 #include <iostream>
 #include <Eigen/Dense>
@@ -8,18 +8,33 @@ constexpr int ROWS = 100 * 60;
 
 int main() {
 	io::CSVReader<COLUMNS> in("psvd_bin.csv");
-	Eigen::ArrayXd x(ROWS), y(ROWS), z(ROWS);
+	Eigen::ArrayXd x_in(ROWS), y_in(ROWS), z_in(ROWS);
 	double xi, yi, zi;
 	Eigen::Index i = 0;
 	
 	while (in.read_row(xi, yi, zi)) {
-		x(i) = xi;
-		y(i) = yi;
-		z(i) = zi;
+		x_in(i) = xi;
+		y_in(i) = yi;
+		z_in(i) = zi;
 		i++;
 	}
+	Eigen::ArrayXd exist_data = (z_in.array() > 0.).select(					     
+		Eigen::ArrayXd::Constant(z_in.size(), 1),
+		Eigen::ArrayXd::Constant(z_in.size(), 0)
+	);
+	size_t n = exist_data.count();
+	Eigen::ArrayXd x(n), y(n), z(n);
+	Eigen::Index j = 0;
+	for (i = 0; i < x_in.size(); i++) {
+	        if (exist_data(i)) {
+		        x(j) = x_in(i);
+			y(j) = y_in(i);
+			z(j) = z_in(i);
+			j++;
+	        }
+	}
 
-	Empsvd::EmpsvdBinCore em(x, y, z, 2, 1000, 1e-5);
+	Empsvd::EmpsvdCore em(x, y, z, 2, 1000, 1e-5);
 
 	std::cout << "---Initial States---" << std::endl;
 	std::cout << "omega   a     b     sigma2     alpha(mu+1)    lambda" << std::endl;

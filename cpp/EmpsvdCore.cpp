@@ -4,6 +4,10 @@
 #include <stdexcept>
 #include <cstddef>
 
+
+const size_t Empsvd::EmpsvdCore::m;
+
+
 Empsvd::EmpsvdCore::EmpsvdCore(
 	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k, const Eigen::ArrayXXd& theta0,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
@@ -20,7 +24,7 @@ Empsvd::EmpsvdCore::EmpsvdCore(
 ) : x(x), y(y), z(Eigen::ArrayXd::Ones(x.size())), k(k), 
 	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {
-	this->theta = this->make_theta0(x, y, k, this->m);
+	this->theta = this->make_theta0(x, y, k);
 	this->check_init();
 	this->gamma = this->get_gamma();
 }
@@ -41,7 +45,7 @@ Empsvd::EmpsvdCore::EmpsvdCore(
 ) : x(x), y(y), z(z), k(k),
 	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {
-	this->theta = this->make_theta0(x, y, k, this->m);
+        this->theta = this->make_theta0(x, y, z, k);
 	this->check_init();
 	this->gamma = this->get_gamma();
 }
@@ -107,14 +111,14 @@ double Empsvd::EmpsvdCore::get_loglikelihood()
 
 double Empsvd::EmpsvdCore::get_loglikelihood(const Eigen::ArrayXXd& theta)
 {
-	return this->get_logsum_pxy(this->get_log_pxy(theta)).sum();
+        return (this->get_logsum_pxy(this->get_log_pxy(theta)) * this->z).sum();
 }
 
 Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(
 	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t const k
 )
 {
-	Eigen::ArrayXXd theta0(k, Empsvd::EmpsvdCore::m);
+        Eigen::ArrayXXd theta0(k, Empsvd::EmpsvdCore::m);
 
 	double const n = z.sum();
 	double const y_mean = (y * z).sum() / n;

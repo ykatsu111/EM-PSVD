@@ -14,7 +14,7 @@ namespace Empsvd {
 		const size_t k, n;
 		static const size_t m = 6;
 		const size_t max_iter;
-		size_t niter;
+		size_t niter = 0;
 		const double tol;
 		const bool fix_alpha, fix_ab;
 
