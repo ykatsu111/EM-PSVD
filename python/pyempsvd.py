@@ -7,9 +7,10 @@ class EmpsvdCore:
 
     def __init__(
         self,
+        k: int,
         x: ndarray,
         y: ndarray,
-        k: int,
+        z: ndarray =None,
         theta0: ndarray =None,
         tol: float =1e-2,
         max_iter: int =1000,
@@ -27,6 +28,10 @@ class EmpsvdCore:
 
         self._x = x  # 1-dim
         self._y = y  # 1-dim
+        if z is None:
+            self._z = np.ones(x.size, dtype=x.dtype)
+        else:
+            self._z = z
 
         self._n = x.size
         self._k = k  # scalar
@@ -37,7 +42,7 @@ class EmpsvdCore:
         self._fix_alpha = fix_alpha
 
         if theta0 is None:
-            self.theta = self.make_theta0(x, y, k)
+            self.theta = self.make_theta0(k, x, y)
         else:
             self.theta = theta0
 
@@ -56,6 +61,11 @@ class EmpsvdCore:
     def y(self) -> ndarray:
         import numpy as np
         return np.array(self._y)
+
+    @property
+    def z(self) -> ndarray:
+        import numpy as np
+        return np.array(self._z)
 
     @property
     def k(self) -> int:
@@ -129,21 +139,27 @@ class EmpsvdCore:
         import numpy as np
         return self.get_loglikelihood() - (0.5 * self.k * self.m * np.log(self.n))
 
-    def get_loglikelihood(self, theta=None) -> float:
+    def get_loglikelihood(self, theta: ndarray =None) -> float:
         import numpy as np
         return np.sum(
-            self._get_logsum_pxy(theta)
+            self._get_logsum_pxy(theta) * self._z
         )
 
     @staticmethod
-    def make_theta0(x, y, k):
+    def make_theta0(k: int, x: ndarray, y: ndarray, z: ndarray =None):
         import numpy as np
 
-        theta = np.zeros([k, 6], dtype=x.dtype)
-        d_mean, d_var = x.mean(), x.std() ** 2
-        v_mean, v_var = y.mean(), y.std() ** 2
+        if z is None:
+            z = np.ones(x.size, dtype=x.dtype)
 
-        a1 = y.max() / d_mean
+        theta = np.zeros([k, EmpsvdCore.M], dtype=x.dtype)
+        n = self.z.sum()
+        v_mean = (y * z).sum() / n
+        v_var = (((y - v_mean) ** 2) * z).sum() / n
+        d_mean = (x * z).sum() / n
+        d_var = (((x - d_mean) ** 2) * z).sum() / n
+
+        a1 = y[z > 0.].max() / d_mean
         a2 = v_mean / 4.
 
         if k > 1:
@@ -238,13 +254,13 @@ class EmpsvdCore:
 
     def _get_new_omegak(self, ik: int) -> float:
         import numpy as np
-        return np.sum(self.gamma[:, ik]) / self.n
+        return np.sum(self.gamma[:, ik]) / self._z.sum()
 
     def _get_new_ak(self, ik: int, new_bk: float) -> float:
         import numpy as np
         gammak = self.gamma[:, ik]
-        q1 = gammak * self._y * self._x ** new_bk
-        q2 = gammak * self._x ** (2.0 * new_bk)
+        q1 = self._z * gammak * self._y * self._x ** new_bk
+        q2 = self._z * gammak * self._x ** (2.0 * new_bk)
         return np.sum(q1) / np.sum(q2)
 
     def _get_new_bk(self, ik: int) -> float:
@@ -255,7 +271,7 @@ class EmpsvdCore:
 
         def bkdot(bk):
             ak = self._get_new_ak(ik, bk)
-            q = gammak * np.log(self._x) * (
+            q = self._z * gammak * np.log(self._x) * (
                 (self._y * self._x ** bk) - (ak * self._x ** (2 * bk))
             )
             return np.sum(q)
@@ -265,8 +281,8 @@ class EmpsvdCore:
     def _get_new_sigma2k(self, ik: int, new_ak: float, new_bk: float) -> float:
         import numpy as np
         gammak = self.gamma[:, ik]
-        q = gammak * (self._y - (new_ak * self._x ** new_bk)) ** 2
-        return np.sum(q) / np.sum(gammak)
+        q = self._z * gammak * (self._y - (new_ak * self._x ** new_bk)) ** 2
+        return np.sum(q) / np.sum(self._z * gammak)
 
     def _get_new_alphak(self, ik: int):
         return self._get_new_alphak_by_invdigamma(ik, self.theta[ik, 4])
@@ -274,8 +290,8 @@ class EmpsvdCore:
     def _get_new_lambdak(self, ik: int, new_alphak: float) -> float:
         import numpy as np
         gammak = self.gamma[:, ik]
-        q = gammak * self._x
-        return new_alphak * np.sum(gammak) / np.sum(q)
+        q = self._z * gammak * self._x
+        return new_alphak * np.sum(self._z * gammak) / np.sum(q)
 
     def _get_new_alphak_by_invdigamma(self, ik: int, alphak0: float, max_iter: int =500, tol: float =1e-2) -> float:
         import numpy as np
@@ -284,9 +300,9 @@ class EmpsvdCore:
         gammak = self.gamma[:, ik]
 
         def alky(x, gammak):
-            q1 = np.sum(gammak)
-            q2 = np.sum(gammak * np.log(x))
-            x_mean = np.sum(gammak * x) / q1
+            q1 = np.sum(self._z * gammak)
+            q2 = np.sum(self._z * gammak * np.log(x))
+            x_mean = np.sum(self._z * gammak * x) / q1
             return np.log(x_mean) - (q2 / q1)
 
         y = alky(self._x, gammak)

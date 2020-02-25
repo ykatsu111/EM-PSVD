@@ -19,19 +19,19 @@ namespace Empsvd {
 		const bool fix_alpha, fix_ab;
 
 		EmpsvdCore(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k, const Eigen::ArrayXXd& theta0,
+			size_t k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta0,
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 		EmpsvdCore(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k,
+			size_t k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y,
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 		EmpsvdCore(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t k, const Eigen::ArrayXXd& theta0,
+			size_t k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, const Eigen::ArrayXXd& theta0,
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 		EmpsvdCore(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t k,
+			size_t k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z,
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 		~EmpsvdCore();
@@ -46,10 +46,10 @@ namespace Empsvd {
 		double get_loglikelihood(const Eigen::ArrayXXd& theta);
 
 		static Eigen::ArrayXXd make_theta0(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t const k
+			size_t const k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z
 		);
 		static Eigen::ArrayXXd make_theta0(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t const k
+			size_t const k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y
 		);
 		static Eigen::ArrayXXd calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta);
 		static Eigen::ArrayXXd calc_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta);

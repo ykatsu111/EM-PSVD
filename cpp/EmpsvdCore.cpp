@@ -9,7 +9,7 @@ const size_t Empsvd::EmpsvdCore::m;
 
 
 Empsvd::EmpsvdCore::EmpsvdCore(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k, const Eigen::ArrayXXd& theta0,
+	size_t k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta0,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
 ) : x(x), y(y), z(Eigen::ArrayXd::Ones(x.size())), k(k), theta(theta0), 
 	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
@@ -19,7 +19,7 @@ Empsvd::EmpsvdCore::EmpsvdCore(
 }
 
 Empsvd::EmpsvdCore::EmpsvdCore(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k,
+	size_t k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
 ) : x(x), y(y), z(Eigen::ArrayXd::Ones(x.size())), k(k), 
 	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
@@ -30,7 +30,7 @@ Empsvd::EmpsvdCore::EmpsvdCore(
 }
 
 Empsvd::EmpsvdCore::EmpsvdCore(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t k, const Eigen::ArrayXXd& theta0, 
+	size_t k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, const Eigen::ArrayXXd& theta0,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
 ) : x(x), y(y), z(z), k(k), theta(theta0),
 	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
@@ -40,12 +40,12 @@ Empsvd::EmpsvdCore::EmpsvdCore(
 }
 
 Empsvd::EmpsvdCore::EmpsvdCore(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t k, 
+	size_t k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
 ) : x(x), y(y), z(z), k(k),
 	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {
-        this->theta = this->make_theta0(x, y, z, k);
+	this->theta = this->make_theta0(x, y, z, k);
 	this->check_init();
 	this->gamma = this->get_gamma();
 }
@@ -115,10 +115,10 @@ double Empsvd::EmpsvdCore::get_loglikelihood(const Eigen::ArrayXXd& theta)
 }
 
 Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t const k
+	size_t const k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z
 )
 {
-        Eigen::ArrayXXd theta0(k, Empsvd::EmpsvdCore::m);
+	Eigen::ArrayXXd theta0(k, Empsvd::EmpsvdCore::m);
 
 	double const n = z.sum();
 	double const y_mean = (y * z).sum() / n;
@@ -151,7 +151,7 @@ Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(
 	return theta0;
 }
 
-Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t const k)
+Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(size_t const k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y)
 {
 	return Empsvd::EmpsvdCore::make_theta0(
 		x, y, Eigen::ArrayXd::Ones(x.size()), k
