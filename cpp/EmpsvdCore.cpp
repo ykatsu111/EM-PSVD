@@ -5,18 +5,41 @@
 #include <cstddef>
 
 Empsvd::EmpsvdCore::EmpsvdCore(
-	Eigen::ArrayXd x, Eigen::ArrayXd y, size_t k, Eigen::ArrayXXd theta0,
+	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k, const Eigen::ArrayXXd& theta0,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
-) : x(x), y(y), k(k), theta(theta0), max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
+) : x(x), y(y), z(Eigen::ArrayXd::Ones(x.size())), k(k), theta(theta0), 
+	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {
 	this->check_init();
 	this->gamma = this->get_gamma();
 }
 
 Empsvd::EmpsvdCore::EmpsvdCore(
-	Eigen::ArrayXd x, Eigen::ArrayXd y, size_t k,
+	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k,
 	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
-) : x(x), y(y), k(k), max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
+) : x(x), y(y), z(Eigen::ArrayXd::Ones(x.size())), k(k), 
+	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
+{
+	this->theta = this->make_theta0(x, y, k, this->m);
+	this->check_init();
+	this->gamma = this->get_gamma();
+}
+
+Empsvd::EmpsvdCore::EmpsvdCore(
+	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t k, const Eigen::ArrayXXd& theta0, 
+	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
+) : x(x), y(y), z(z), k(k), theta(theta0),
+	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
+{
+	this->check_init();
+	this->gamma = this->get_gamma();
+}
+
+Empsvd::EmpsvdCore::EmpsvdCore(
+	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t k, 
+	size_t max_iter, double tol, bool fix_alpha, bool fix_ab
+) : x(x), y(y), z(z), k(k),
+	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {
 	this->theta = this->make_theta0(x, y, k, this->m);
 	this->check_init();
@@ -88,24 +111,27 @@ double Empsvd::EmpsvdCore::get_loglikelihood(const Eigen::ArrayXXd& theta)
 }
 
 Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(
-	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, 
-	size_t const k, size_t const m
+	const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t const k
 )
 {
-	Eigen::ArrayXXd theta0(k, m);
+	Eigen::ArrayXXd theta0(k, Empsvd::EmpsvdCore::m);
 
-	int const n = x.size();
-	double const y_mean = y.mean();
-	double const y_var = (y - y_mean).square().sum() / n;
-	double const x_mean = x.mean();
-	double const x_var = (x - x_mean).square().sum() / n;
+	double const n = z.sum();
+	double const y_mean = (y * z).sum() / n;
+	double const y_var = ((y - y_mean).square() * z).sum() / n;
+	double const x_mean = (x * z).sum() / n;
+	double const x_var = ((x - x_mean).square() * z).sum() / n;
 
 	theta0.col(0) = 1. / k;                        // omega: mixing fraction
 	theta0.col(3) = y_var;                         // sigma2: variance of velocity
 	theta0.col(4) = std::pow(x_mean, 2) / x_var;   // alpha: mu + 1, shape parameter of size distribution
 	theta0.col(5) = x_mean / x_var;                // lambda: slope parameter of size distribution
 
-	double a_upp = y.maxCoeff() / x_mean;
+	Eigen::ArrayXd exist_data = (z.array() > 0.).select(
+		Eigen::ArrayXd::Constant(z.size(), 1),
+		Eigen::ArrayXd::Constant(z.size(), 0)
+	);
+	double a_upp = (y * exist_data).maxCoeff() / x_mean;
 	double a_low = y_mean / 4;
 
 	if (k > 1) {
@@ -119,6 +145,13 @@ Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(
 	}
 
 	return theta0;
+}
+
+Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t const k)
+{
+	return Empsvd::EmpsvdCore::make_theta0(
+		x, y, Eigen::ArrayXd::Ones(x.size()), k
+	);
 }
 
 Eigen::ArrayXXd Empsvd::EmpsvdCore::calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta)
@@ -182,8 +215,9 @@ double Empsvd::EmpsvdCore::digammad(double a)
 
 void Empsvd::EmpsvdCore::check_init()
 {
-	if (x.size() != n || y.size() != n) throw std::logic_error("Mismatch size between x and y.");
+	if (x.size() != n || y.size() != n || z.size() != n) throw std::length_error("Mismatch size between x, y, and z.");
 	if (theta.cols() != m) throw std::length_error("Column length of theta must be 6.");
+	if (z.sum() <= 0.) throw std::overflow_error("sum(z)=0: This will cause overflow.");
 }
 
 Eigen::ArrayXXd Empsvd::EmpsvdCore::get_log_pxy()
@@ -250,13 +284,13 @@ Eigen::ArrayXXd Empsvd::EmpsvdCore::get_gamma(const Eigen::ArrayXXd& theta)
 
 double Empsvd::EmpsvdCore::get_new_omegak(Eigen::Index ik)
 {
-	return this->gamma.col(ik).sum() / this->n;
+	return (this->z * this->gamma.col(ik)).sum() / this->z.sum();
 }
 
 double Empsvd::EmpsvdCore::get_new_ak(Eigen::Index ik, double new_bk)
 {
-	double q1 = (this->gamma.col(ik) * this->y * this->x.pow(new_bk)).sum();
-	double q2 = (this->gamma.col(ik) * this->x.pow(2 * new_bk)).sum();
+	double q1 = (this->z * this->gamma.col(ik) * this->y * this->x.pow(new_bk)).sum();
+	double q2 = (this->z * this->gamma.col(ik) * this->x.pow(2 * new_bk)).sum();
 	return q1 / q2;
 }
 
@@ -287,8 +321,8 @@ double Empsvd::EmpsvdCore::get_new_bk(Eigen::Index ik)
 
 double Empsvd::EmpsvdCore::get_new_sigma2k(Eigen::Index ik, double new_ak, double new_bk)
 {
-	double q1 = (this->gamma.col(ik) * (this->y - (new_ak * this->x.pow(new_bk))).square()).sum();
-	double q2 = this->gamma.col(ik).sum();
+	double q1 = (this->z * this->gamma.col(ik) * (this->y - (new_ak * this->x.pow(new_bk))).square()).sum();
+	double q2 = (this->z * this->gamma.col(ik)).sum();
 	return q1 / q2;
 }
 
@@ -299,8 +333,8 @@ double Empsvd::EmpsvdCore::get_new_alphak(Eigen::Index ik)
 
 double Empsvd::EmpsvdCore::get_new_lambdak(Eigen::Index ik, double new_alphak)
 {
-	double q1 = this->gamma.col(ik).sum();
-	double q2 = (this->gamma.col(ik) * x).sum();
+	double q1 = (this->z * this->gamma.col(ik)).sum();
+	double q2 = (this->z * this->gamma.col(ik) * x).sum();
 	return new_alphak * q1 / q2;
 }
 
@@ -308,7 +342,7 @@ double Empsvd::EmpsvdCore::bkdot(Eigen::Index ik, double bk)
 {
 	double ak = this->get_new_ak(ik, bk);
 	return (
-		this->gamma.col(ik) * this->x.log() *
+		this->z * this->gamma.col(ik) * this->x.log() *
 		((this->y * this->x.pow(bk)) - (ak * this->x.pow(2 * bk)))
 		).sum();
 }
@@ -335,9 +369,9 @@ double Empsvd::EmpsvdCore::get_new_bk_by_newton(Eigen::Index ik, double bk0, dou
 
 double Empsvd::EmpsvdCore::get_new_alphak_by_invdigamma(Eigen::Index ik, double alphak0, size_t max_iter, double tol)
 {
-	double q1 = this->gamma.col(ik).sum();
-	double logx_mean = (this->gamma.col(ik) * this->x.log()).sum() / q1;
-	double x_mean = (this->gamma.col(ik) * this->x).sum() / q1;
+	double q1 = (this->z * this->gamma.col(ik)).sum();
+	double logx_mean = (this->z * this->gamma.col(ik) * this->x.log()).sum() / q1;
+	double x_mean = (this->z * this->gamma.col(ik) * this->x).sum() / q1;
 	double y = std::log(x_mean) - logx_mean;
 
 	double dig, alphak1;
