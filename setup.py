@@ -31,7 +31,7 @@ else:
     ext_modules = [
         Extension(
             "pyempsvd",
-            ["cpp/EmpsvdCore.cpp", "cpp/EmpsvdBinCore.cpp", "cpp/PyEmpsvd.cpp"],
+            ["cpp/EmpsvdCore.cpp", "cpp/PyEmpsvd.cpp"],
             include_dirs=[
                 pybind11.get_include(),
                 pybind11.get_include(True)
