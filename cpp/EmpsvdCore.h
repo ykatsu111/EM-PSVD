@@ -8,7 +8,7 @@ namespace Empsvd {
 	class EmpsvdCore
 	{
 	public:
-		const Eigen::ArrayXd x, y;
+		const Eigen::ArrayXd x, y, z;
 		Eigen::ArrayXXd theta;
 		Eigen::ArrayXXd gamma;
 		const size_t k, n;
@@ -18,13 +18,20 @@ namespace Empsvd {
 		const double tol;
 		const bool fix_alpha, fix_ab;
 
-		// もしかして、参照渡しは危険？ユーザーが元のデータを消してるけどこのクラスオブジェクトが残っている状況がありそう？
 		EmpsvdCore(
-			Eigen::ArrayXd x, Eigen::ArrayXd y, size_t k, Eigen::ArrayXXd theta0,
+			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k, const Eigen::ArrayXXd& theta0,
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 		EmpsvdCore(
-			Eigen::ArrayXd x, Eigen::ArrayXd y, size_t k,
+			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t k,
+			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
+		);
+		EmpsvdCore(
+			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t k, const Eigen::ArrayXXd& theta0,
+			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
+		);
+		EmpsvdCore(
+			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t k,
 			size_t max_iter = 1000, double tol = 1e-2, bool fix_alpha = false, bool fix_ab = false
 		);
 		~EmpsvdCore();
@@ -36,11 +43,13 @@ namespace Empsvd {
 		double get_aic();
 		double get_bic();
 		double get_loglikelihood();
-		virtual double get_loglikelihood(const Eigen::ArrayXXd& theta);
+		double get_loglikelihood(const Eigen::ArrayXXd& theta);
 
 		static Eigen::ArrayXXd make_theta0(
-			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y,
-			size_t const k, size_t const m
+			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXd& z, size_t const k
+		);
+		static Eigen::ArrayXXd make_theta0(
+			const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, size_t const k
 		);
 		static Eigen::ArrayXXd calc_log_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta);
 		static Eigen::ArrayXXd calc_pxy(const Eigen::ArrayXd& x, const Eigen::ArrayXd& y, const Eigen::ArrayXXd& theta);
@@ -57,8 +66,8 @@ namespace Empsvd {
 		Eigen::ArrayXd get_sum_pxy();
 		Eigen::ArrayXd get_sum_pxy(Eigen::ArrayXXd log_pxy);
 		Eigen::ArrayXXd get_gamma();
-		virtual Eigen::ArrayXXd get_gamma(const Eigen::ArrayXXd& theta);
-		virtual double get_new_omegak(Eigen::Index ik);
+		Eigen::ArrayXXd get_gamma(const Eigen::ArrayXXd& theta);
+		double get_new_omegak(Eigen::Index ik);
 		double get_new_ak(Eigen::Index ik, double new_bk);
 		double get_new_bk(Eigen::Index ik);
 		double get_new_sigma2k(Eigen::Index ik, double new_ak, double new_bk);
