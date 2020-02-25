@@ -39,18 +39,4 @@ PYBIND11_MODULE(pyempsvd, mod) {
 		.def_static("calc_pxy", &Empsvd::EmpsvdCore::calc_pxy, py::arg("x"), py::arg("y"), py::arg("theta"))
 		;
 
-	py::class_<Empsvd::EmpsvdBinCore, Empsvd::EmpsvdCore>(mod, "EmpsvdBinCore")
-		.def(py::init<Eigen::ArrayXd, Eigen::ArrayXd, Eigen::ArrayXd, size_t, Eigen::ArrayXd, size_t, double, bool, bool>(),
-			py::arg("x"), py::arg("y"), py::arg("z"), py::arg("k"), py::arg("theta0"),
-			py::arg("max_iter") = 1000, py::arg("tol") = 1e-2, py::arg("fix_alpha") = false, py::arg("fix_ab") = false)
-		.def(py::init<Eigen::ArrayXd, Eigen::ArrayXd, Eigen::ArrayXd, size_t, size_t, double, bool, bool>(),
-			py::arg("x"), py::arg("y"), py::arg("z"), py::arg("k"),
-			py::arg("max_iter") = 1000, py::arg("tol") = 1e-2, py::arg("fix_alpha") = false, py::arg("fix_ab") = false)
-	        .def("get_loglikelihood", (double (Empsvd::EmpsvdBinCore::*)(void)) & Empsvd::EmpsvdBinCore::get_loglikelihood)
-		.def("get_loglikelihood", (double (Empsvd::EmpsvdBinCore::*)(const Eigen::ArrayXXd&)) & Empsvd::EmpsvdBinCore::get_loglikelihood, py::arg("theta"))
-
-		.def_readonly("z", &Empsvd::EmpsvdBinCore::z)
-
-		.def_static("make_theta0", &Empsvd::EmpsvdBinCore::make_theta0, py::arg("x"), py::arg("y"), py::arg("z"), py::arg("k"), py::arg("m"))
-		;
 }
