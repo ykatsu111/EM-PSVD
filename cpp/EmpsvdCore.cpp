@@ -24,7 +24,7 @@ Empsvd::EmpsvdCore::EmpsvdCore(
 ) : x(x), y(y), z(Eigen::ArrayXd::Ones(x.size())), k(k), 
 	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {
-	this->theta = this->make_theta0(x, y, k);
+	this->theta = this->make_theta0(k, x, y);
 	this->check_init();
 	this->gamma = this->get_gamma();
 }
@@ -45,7 +45,7 @@ Empsvd::EmpsvdCore::EmpsvdCore(
 ) : x(x), y(y), z(z), k(k),
 	max_iter(max_iter), tol(tol), fix_ab(fix_ab), fix_alpha(fix_alpha), n(x.size())
 {
-	this->theta = this->make_theta0(x, y, z, k);
+	this->theta = this->make_theta0(k, x, y, z);
 	this->check_init();
 	this->gamma = this->get_gamma();
 }
@@ -154,7 +154,7 @@ Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(
 Eigen::ArrayXXd Empsvd::EmpsvdCore::make_theta0(size_t const k, const Eigen::ArrayXd& x, const Eigen::ArrayXd& y)
 {
 	return Empsvd::EmpsvdCore::make_theta0(
-		x, y, Eigen::ArrayXd::Ones(x.size()), k
+		k, x, y, Eigen::ArrayXd::Ones(x.size())
 	);
 }
 

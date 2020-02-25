@@ -7,7 +7,7 @@ program main
   integer(8) :: i, info, L
 
   ! read data and parameters
-  open(10, file="psvd_bin.csv", status="old")
+  open(10, file="../data/psvd_bin.csv", status="old")
   do i = 1, N
      read(10, *) x_in(i), y_in(i), z_in(i)
   end do
@@ -23,7 +23,7 @@ program main
   z = pack( z_in, z_in > 0. )
   
   ! print initial condition
-  call init(x, y, K, max_iter=max_iter, tol=1d-5, weight=z)
+  call init(K, x, y, z, max_iter=max_iter, tol=1d-5)
   write(*, "(A)") "----initial condition----"
   do i = 1, K
      write(*, "(A,I0,A,6F15.5,A))") "theta(", i, ")=(", theta(i, :), ")"

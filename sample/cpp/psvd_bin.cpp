@@ -7,7 +7,7 @@ constexpr int COLUMNS = 3;
 constexpr int ROWS = 100 * 60;
 
 int main() {
-	io::CSVReader<COLUMNS> in("psvd_bin.csv");
+	io::CSVReader<COLUMNS> in("../data/psvd_bin.csv");
 	Eigen::ArrayXd x_in(ROWS), y_in(ROWS), z_in(ROWS);
 	double xi, yi, zi;
 	Eigen::Index i = 0;
@@ -34,7 +34,7 @@ int main() {
 	        }
 	}
 
-	Empsvd::EmpsvdCore em(x, y, z, 2, 1000, 1e-5);
+	Empsvd::EmpsvdCore em(2, x, y, z, 1000, 1e-5);
 
 	std::cout << "---Initial States---" << std::endl;
 	std::cout << "omega   a     b     sigma2     alpha(mu+1)    lambda" << std::endl;

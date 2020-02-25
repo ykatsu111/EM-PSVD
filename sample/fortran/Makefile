@@ -29,14 +29,13 @@ empsvd_static.o: ./src/empsvd_static.f90
 .PHONY: clean pre
 
 pre:
-	cp -v ../data/* ./
 	if [ ! -d src ]; then \
 		mkdir src; \
 	fi
 	cp -v ../../fortran/*.f90 ./src
 
 clean:
-	${RM} ${TARGET} ${OBJ} ${MOD} *.csv
+	${RM} ${TARGET} ${OBJ} ${MOD}
 	if [ -d src ]; then \
 		rm -rv ./src; \
 	fi

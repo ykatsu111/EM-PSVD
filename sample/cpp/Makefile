@@ -25,7 +25,6 @@ EmpsvdCore.o: ./src/EmpsvdCore.cpp
 .PHONY: clean pre
 
 pre:
-	cp -v ../data/* ./
 	if [ ! -d src ]; then \
 		mkdir src; \
 	fi
@@ -33,7 +32,7 @@ pre:
 	cp -v ../../cpp/*.h ./src
 
 clean:
-	${RM} ${TARGET} ${OBJ} *.csv
+	${RM} ${TARGET} ${OBJ}
 	if [ -d src ]; then \
 		rm -rv ./src; \
 	fi

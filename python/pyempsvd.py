@@ -42,7 +42,7 @@ class EmpsvdCore:
         self._fix_alpha = fix_alpha
 
         if theta0 is None:
-            self.theta = self.make_theta0(k, x, y)
+            self.theta = self.make_theta0(k, x, y, self._z)
         else:
             self.theta = theta0
 
@@ -153,7 +153,7 @@ class EmpsvdCore:
             z = np.ones(x.size, dtype=x.dtype)
 
         theta = np.zeros([k, EmpsvdCore.M], dtype=x.dtype)
-        n = self.z.sum()
+        n = z.sum()
         v_mean = (y * z).sum() / n
         v_var = (((y - v_mean) ** 2) * z).sum() / n
         d_mean = (x * z).sum() / n

@@ -26,21 +26,20 @@ module empsvd_core
 contains
 
 
-  subroutine init(x_in, y_in, k_in, theta0, max_iter, tol, fix_alpha, fix_ab, weight)
+  subroutine init(k_in, x_in, y_in, z_in, theta0, max_iter, tol, fix_alpha, fix_ab)
     use empsvd_static, only: stop_with_error, make_theta0
     implicit none
-    real(8)   , intent(in) :: x_in(:), y_in(:)
     integer(8), intent(in) :: k_in
-    real(8)   , intent(in), optional :: theta0(k_in, M)
+    real(8)   , intent(in) :: x_in(:), y_in(:)
+    real(8)   , intent(in), optional :: z_in(:), theta0(k_in, M)
     integer(8), intent(in), optional :: max_iter
     real(8)   , intent(in), optional :: tol
     logical   , intent(in), optional :: fix_alpha, fix_ab
-    real(8)   , intent(in), optional :: weight(:)
     integer(8) :: shp(2)
 
     if ( size(x_in) /= size(y_in)) call stop_with_error("data length of x and y must be same.")
-    if ( present(weight) ) then
-       if ( size(x_in) /= size(weight) ) call stop_with_error("length of z must be same as that of x.")
+    if ( present(z_in) ) then
+       if ( size(x_in) /= size(z_in) ) call stop_with_error("length of z must be same as that of x.")
     end if
     
     if ( allocated(x) ) deallocate(x)
@@ -66,7 +65,7 @@ contains
     x = x_in
     y = y_in
     z = 1.
-    if ( present(weight) ) z = weight
+    if ( present(z_in) ) z = z_in
 
     if ( present(theta0) ) then
        theta = theta0
