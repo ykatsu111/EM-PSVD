@@ -217,3 +217,169 @@ plt.show()
 ```
 
 <img src="fig/fitted_psvd_bin.png" />
+
+# For C++ users
+
+## Requirements
+
+The C++ class requires followings.
+
+1. C++11
+2. Eigen3
+
+## Demonstration
+
+A demonstration has been prepared in [sample/cpp](sample/cpp): [psvd.cpp](sample/cpp/psvd.cpp) and [psvd_bin.cpp](sample/cpp/psvd_bin.cpp) provides a demonstration for pure PSVD data and a demonstration for binned PSVD data, respectively.
+
+```
+cd sample/cpp
+```
+
+To compile the demonstrations, please modify `Makefile` following your environment and run `make pre` and `make` commands.
+
+```
+make pre
+make
+```
+
+Then, you can see the executable files, `psvd.exe` and `psvd_bin.exe`. 
+
+The usage is mostly same as the python. First, construct `EmpsvdCore` object after diameter (=`x`) and velocity (=`y`) data is obtained.
+
+```cpp
+constexpr int COLUMNS = 2;
+constexpr int ROWS = 900;
+io::CSVReader<COLUMNS> in("../data/psvd.csv");
+Eigen::ArrayXd x(ROWS), y(ROWS);
+double xi, yi;
+Eigen::Index i = 0;	
+while (in.read_row(xi, yi)) {
+    x(i) = xi;
+    y(i) = yi;
+    i++;
+}
+Empsvd::EmpsvdCore em(2, x, y);
+```
+
+The fitting can be easily conduct by calling `em.fit()`.
+
+```cpp
+em.fit();
+```
+
+If the fitting has not been successfully done, `std::runtime_error` will be thrown. The fitting result can be contained in `em.theta` variable as well as the python.
+
+If the PSVD data is binned data, the code is slightly modified.
+
+```cpp
+constexpr int COLUMNS = 3;
+constexpr int ROWS = 100 * 60;
+io::CSVReader<COLUMNS> in("../data/psvd_bin.csv");
+Eigen::ArrayXd x_in(ROWS), y_in(ROWS), z_in(ROWS);
+double xi, yi, zi;
+Eigen::Index i = 0;
+
+while (in.read_row(xi, yi, zi)) {
+    x_in(i) = xi;
+    y_in(i) = yi;
+    z_in(i) = zi;
+    i++;
+}
+Eigen::ArrayXd exist_data = (z_in.array() > 0.).select(					     
+    Eigen::ArrayXd::Constant(z_in.size(), 1),
+    Eigen::ArrayXd::Constant(z_in.size(), 0)
+);
+size_t n = exist_data.count();
+Eigen::ArrayXd x(n), y(n), z(n);
+Eigen::Index j = 0;
+for (i = 0; i < x_in.size(); i++) {
+        if (exist_data(i)) {
+            x(j) = x_in(i);
+            y(j) = y_in(i);
+            z(j) = z_in(i);
+            j++;
+        }
+}
+
+Empsvd::EmpsvdCore em(2, x, y, z);
+```
+
+Please note that the elements where `z=0` should be removed in advance to construct `EmpsvdCore` object in order to avoid the zero division error.
+
+# For fortran uesrs
+
+## Requirements
+
+The fortran module works under the normal fortran environment, fotran90/95.
+
+## Demonstration
+
+A demonstration has been prepared in [sample/fortran](sample/fortran): [psvd.f90](sample/fortran/psvd.f90) and [psvd_bin.f90](sample/fortran/psvd_bin.f90) provides a demonstration for pure PSVD data and a demonstration for binned PSVD data, respectively.
+
+```
+cd sample/fortran
+```
+
+To compile the demonstrations, please modify `Makefile` following your environment and run `make pre` and `make` commands.
+
+```
+make pre
+make
+```
+
+Then, you can see the executable files, `psvd.exe` and `psvd_bin.exe`. 
+
+The usage is mostly same as the python and C++. First, initialize the module by calling `init` function after diameter (=`x`) and velocity (=`y`) data is obtained.
+
+```f90
+use empsvd_core, only: init, fit, theta
+implicit none
+integer(8), parameter :: N=900, K=2
+real(8) :: x(N), y(N), r
+integer(8) :: i, info
+
+open(10, file="../data/psvd.csv", status="old")
+do i = 1, N
+    read(10, *) x(i), y(i)
+end do
+close(10)
+
+call init(K, x, y)
+```
+
+The fitting can be easily done by calling `fit` function.
+
+```f90
+call fit(info)
+```
+
+If the fitting has been successfully done, `info` will be `0`. The fitting result can be contained in `theta` variable as well as python and C++ demonstrations.
+
+For the binned PSVD data, the code is slightly modified.
+
+```f90
+use empsvd_core, only: init, fit, theta, M, niter
+implicit none
+integer(8), parameter :: N=100 * 60, K=2, max_iter=1000
+real(8) :: x_in(N), y_in(N), z_in(N), r
+real(8), allocatable :: x(:), y(:), z(:)
+integer(8) :: i, info, L
+
+open(10, file="../data/psvd_bin.csv", status="old")
+do i = 1, N
+    read(10, *) x_in(i), y_in(i), z_in(i)
+end do
+close(10)
+
+L = count( z_in > 0. )
+allocate( x(L) )
+allocate( y(L) )
+allocate( z(L) )
+x = pack( x_in, z_in > 0. )
+y = pack( y_in, z_in > 0. )
+z = pack( z_in, z_in > 0. )
+
+call init(K, x, y, z)
+```
+
+Please note that the elements where `z=0` should be removed before calling `init` in order to avoid the zero division error.
