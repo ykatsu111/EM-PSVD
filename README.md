@@ -13,6 +13,8 @@ Here, "ω" is a mixing fraction, "a" and "b" are parameters of the velocity-diam
 
 Please see [Katsuyama and Inatsu (2020)]() for details of the algorithm.
 
+Katsuyama, Y., and M. Inatsu, 2020: Fitting precipitation particle size-velocity data to mixed joint probability density function with an expectation maximization algorithm, J. Atmos. Oceanic Tech., in revision
+
 # Licence and Aggreement
 
 The source codes of this repositry is distributed under the XXX Licence.  
