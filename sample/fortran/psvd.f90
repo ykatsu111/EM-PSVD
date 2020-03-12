@@ -7,6 +7,7 @@ program main
 
   ! read data and parameters
   open(10, file="../data/psvd.csv", status="old")
+  read(10, *)
   do i = 1, N
      read(10, *) x(i), y(i)
   end do
