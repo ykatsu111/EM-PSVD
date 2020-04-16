@@ -276,7 +276,7 @@ contains
     implicit none
     real(8), intent(in)  :: a
     real(8), intent(out) :: dig
-    real(8)    :: out, a1, a2
+    real(8)    :: a1, a2
     integer(8) :: i
     real(8), parameter :: c(6) = (/ 0.64493313d0,  &
          &                         -0.20203181d0,  &

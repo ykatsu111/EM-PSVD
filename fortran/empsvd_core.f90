@@ -35,7 +35,6 @@ contains
     integer(8), intent(in), optional :: max_iter
     real(8)   , intent(in), optional :: tol
     logical   , intent(in), optional :: fix_alpha, fix_ab
-    integer(8) :: shp(2)
 
     if ( size(x_in) /= size(y_in)) call stop_with_error("data length of x and y must be same.")
     if ( present(z_in) ) then
