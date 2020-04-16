@@ -11,12 +11,12 @@ Here, "ω" is a mixing fraction, "a" and "b" are parameters of the velocity-diam
 <img src="fig/eqn3.gif" />  
 , "σ2" is a variance of velocity distribution assumed as the Normal distribution, "μ" and "λ" is respectively the shape and slope parameter of the diameter distribution assumed as the Gamma distribution, and "K" is the number of PDF elements. The fitting algorithm in this repositry can provide the optimal parameter set of "θ" giving the number of PDF elements.
 
-Please see [Katsuyama and Inatsu (2020)]() for details of the algorithm.
+Please see [Katsuyama and Inatsu (2020)](https://doi.org/10.1175/JTECH-D-19-0150.1) for details of the algorithm.
 
 # Licence and Aggreement
 
 The source codes of this repositry is distributed under the XXX Licence.  
-You must cite [Katsuyama and Inatsu (2020)]() in an appropriate way when you present and/or publish scientific results, products, and so on, obtained by using this fitting algorithm.
+You must cite [Katsuyama and Inatsu (2020)](https://doi.org/10.1175/JTECH-D-19-0150.1) in an appropriate way when you present and/or publish scientific results, products, and so on, obtained by using this fitting algorithm.
 
 Katsuyama, Y., and M. Inatsu, 2020: Fitting precipitation particle size-velocity data to mixed joint probability density function with an expectation maximization algorithm, J. Atmos. Oceanic Tech., in revision
 
