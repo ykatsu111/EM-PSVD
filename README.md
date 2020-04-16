@@ -4,11 +4,11 @@ This repositry provides some classes and modules to fit the mixed joint probabil
 The supported languages are now Python, C++, and fortran.  
 
 In the fitting algorithm, we assume a mixed joint PDF of diameter ("D") and velocity ("V"):  
-<a href="https://www.codecogs.com/eqnedit.php?latex=P(V,D|\mathbf{\theta})&space;=&space;\sum_{k=1}^{K}&space;\omega_k&space;Normal(V|\mu=a_k&space;D^{b_k},\sigma^2_k)&space;Gamma(D|\mu_k,&space;\lambda_k)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?P(V,D|\mathbf{\theta})&space;=&space;\sum_{k=1}^{K}&space;\omega_k&space;Normal(V|\mu=a_k&space;D^{b_k},\sigma^2_k)&space;Gamma(D|\mu_k,&space;\lambda_k)" title="P(V,D|\mathbf{\theta}) = \sum_{k=1}^{K} \omega_k Normal(V|\mu=a_k D^{b_k},\sigma^2_k) Gamma(D|\mu_k, \lambda_k)" /></a>  
+<img src="fig/eqn1.png" />  
 , where  
-<a href="https://www.codecogs.com/eqnedit.php?latex=\mathbf{\theta}=(\omega_1,&space;...,&space;\omega_K,&space;a_1,&space;...,&space;a_K,&space;b_1,&space;...,&space;b_K,&space;\sigma^2_1,&space;...,&space;\sigma^2_K,&space;\mu_1,&space;...,&space;\mu_K,&space;\lambda_1,&space;...,&space;\lambda_K)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\mathbf{\theta}=(\omega_1,&space;...,&space;\omega_K,&space;a_1,&space;...,&space;a_K,&space;b_1,&space;...,&space;b_K,&space;\sigma^2_1,&space;...,&space;\sigma^2_K,&space;\mu_1,&space;...,&space;\mu_K,&space;\lambda_1,&space;...,&space;\lambda_K)" title="\mathbf{\theta}=(\omega_1, ..., \omega_K, a_1, ..., a_K, b_1, ..., b_K, \sigma^2_1, ..., \sigma^2_K, \mu_1, ..., \mu_K, \lambda_1, ..., \lambda_K)" /></a>.  
+<img src="fig/eqn2.png" />  
 Here, "ω" is a mixing fraction, "a" and "b" are parameters of the velocity-diameter relationship  
-<a href="https://www.codecogs.com/eqnedit.php?latex=V=aD^b" target="_blank"><img src="https://latex.codecogs.com/gif.latex?V=aD^b" title="V=aD^b" /></a>  
+<img src="fig/eqn3.png" />  
 , "σ2" is a variance of velocity distribution assumed as the Normal distribution, "μ" and "λ" is respectively the shape and slope parameter of the diameter distribution assumed as the Gamma distribution, and "K" is the number of PDF elements. The fitting algorithm in this repositry can provide the optimal parameter set of "θ" giving the number of PDF elements.
 
 Please see [Katsuyama and Inatsu (2020)]() for details of the algorithm.
