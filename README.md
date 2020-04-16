@@ -4,11 +4,11 @@ This repositry provides some classes and modules to fit the mixed joint probabil
 The supported languages are now Python, C++, and fortran.  
 
 In the fitting algorithm, we assume a mixed joint PDF of diameter ("D") and velocity ("V"):  
-<img src="fig/eqn1.png" />  
+<img src="fig/eqn1.gif" />  
 , where  
-<img src="fig/eqn2.png" />  
+<img src="fig/eqn2.gif" />  
 Here, "ω" is a mixing fraction, "a" and "b" are parameters of the velocity-diameter relationship  
-<img src="fig/eqn3.png" />  
+<img src="fig/eqn3.gif" />  
 , "σ2" is a variance of velocity distribution assumed as the Normal distribution, "μ" and "λ" is respectively the shape and slope parameter of the diameter distribution assumed as the Gamma distribution, and "K" is the number of PDF elements. The fitting algorithm in this repositry can provide the optimal parameter set of "θ" giving the number of PDF elements.
 
 Please see [Katsuyama and Inatsu (2020)]() for details of the algorithm.
