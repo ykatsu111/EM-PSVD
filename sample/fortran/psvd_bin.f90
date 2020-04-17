@@ -27,7 +27,7 @@ program main
   call init(K, x, y, z, max_iter=max_iter, tol=1d-5)
   write(*, "(A)") "----initial condition----"
   do i = 1, K
-     write(*, "(A,I0,A,6F15.5,A))") "theta(", i, ")=(", theta(i, :), ")"
+     write(*, "(A,I0,A,6F15.5,A)") "theta(", i, ")=(", theta(i, :), ")"
   end do
   call get_loglikelihood(r)
   write(*, "(A,F15.5)") "log-likelihood: ", r
@@ -46,7 +46,7 @@ program main
   ! print result
   write(*, "(A)") "----Fitting result----"
   do i = 1, K
-     write(*, "(A,I0,A,6F15.5,A))") "theta(", i, ")=(", theta(i, :), ")"
+     write(*, "(A,I0,A,6F15.5,A)") "theta(", i, ")=(", theta(i, :), ")"
   end do
   write(*, "(A,I0)") "number of iteration: ", niter
   call get_loglikelihood(r)

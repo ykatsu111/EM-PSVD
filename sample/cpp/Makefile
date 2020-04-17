@@ -1,6 +1,6 @@
-CXX = /usr/local/src/gcc-4.9/bin/g++4.9
-INCEigen3 = ${HOME}/.local/include
-FLAGS = -O0 -Wall -std=c++11 -Wl,-rpath=/usr/local/src/gcc-4.9/lib64 -I${INCEigen3} -I./src
+CXX = g++
+INCEigen3 = /usr/local/include/eigen3
+FLAGS = -O0 -std=c++11 -I${INCEigen3} -I./src
 TARGET = psvd.exe psvd_bin.exe
 SRC = psvd.cpp psvd_bin.cpp EmpsvdCore.cpp
 OBJ = ${SRC:.cpp=.o}
