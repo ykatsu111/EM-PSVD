@@ -1,5 +1,7 @@
 #include "EmpsvdCore.h"
-#include "csv.h"
+#include <fstream>
+#include <sstream>
+#include <string>
 #include <iostream>
 #include <Eigen/Dense>
 
@@ -7,17 +9,25 @@ constexpr int COLUMNS = 3;
 constexpr int ROWS = 100 * 60;
 
 int main() {
-	io::CSVReader<COLUMNS> in("../data/psvd_bin.csv");
+	std::ifstream ifs("../data/psvd_bin.csv");
 	Eigen::ArrayXd x_in(ROWS), y_in(ROWS), z_in(ROWS);
-	double xi, yi, zi;
 	Eigen::Index i = 0;
+	std::string buf, field;
 	
-	while (in.read_row(xi, yi, zi)) {
-		x_in(i) = xi;
-		y_in(i) = yi;
-		z_in(i) = zi;
+	if (!ifs.is_open()) {
+		std::cerr << "No file is opened." << std::endl;
+		return 0;
+	}
+	std::getline(ifs, buf);  // skip header
+	while (std::getline(ifs, buf)) {
+		std::stringstream ss(buf);
+		std::getline(ss, field, ','); x_in(i) = std::stod(field);
+		std::getline(ss, field, ','); y_in(i) = std::stod(field);
+		std::getline(ss, field, ','); z_in(i) = std::stod(field);
 		i++;
 	}
+
+	// extract elements where z > 0
 	Eigen::ArrayXd exist_data = (z_in.array() > 0.).select(					     
 		Eigen::ArrayXd::Constant(z_in.size(), 1),
 		Eigen::ArrayXd::Constant(z_in.size(), 0)
