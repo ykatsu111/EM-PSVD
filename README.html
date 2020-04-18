@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="introduction">Introduction</h1>
+<p>This software provides some classes and modules to fit the mixed joint probability density function (PDF) to precipitation particle diameter velocity distribution (PSVD) data using the expectation maximization (EM) algorithm and their sample source codes.<br>
+The supported languages are now Python, C++, and fortran.</p>
+<p>In the fitting algorithm, we assume a mixed joint PDF of diameter (&quot;D&quot;) and velocity (&quot;V&quot;):<br>
+<img src="fig/eqn1.gif" /><br>
+, where<br>
+<img src="fig/eqn2.gif" /><br>
+Here, &quot;ω&quot; is a mixing fraction, &quot;a&quot; and &quot;b&quot; are parameters of the velocity-diameter relationship<br>
+<img src="fig/eqn3.gif" /><br>
+, &quot;σ2&quot; is a variance of velocity distribution assumed as the Normal distribution, &quot;μ&quot; and &quot;λ&quot; is respectively the shape and slope parameter of the diameter distribution assumed as the Gamma distribution, and &quot;K&quot; is the number of PDF elements. The fitting algorithm can provide the optimal parameter set of &quot;θ&quot; giving the number of PDF elements.</p>
+<p>Please see <a href="https://doi.org/10.1175/JTECH-D-19-0150.1">Katsuyama and Inatsu (2020)</a> for details of the algorithm.</p>
+<h1 id="licence-and-agreement">Licence and agreement</h1>
+<p>The source codes is distributed under the <a href="https://opensource.org/licenses/MIT">MIT license</a>.<br>
+You must cite <a href="https://doi.org/10.1175/JTECH-D-19-0150.1">Katsuyama and Inatsu (2020)</a> in an appropriate way when you present and/or publish scientific results and products using this fitting algorithm.</p>
+<p>Katsuyama, Y., and M. Inatsu, 2020: Fitting precipitation particle size-velocity data to mixed joint probability density function with an expectation maximization algorithm, J. Atmos. Oceanic Tech., doi: <a href="https://doi.org/10.1175/JTECH-D-19-0150.1">10.1175/JTECH-D-19-0150.1</a>, accepted.</p>
+<h1 id="for-python-users">For python users</h1>
+<h2 id="requirements">Requirements</h2>
+<p>The python module requires followings.</p>
+<ol>
+<li><a href="https://www.python.org/">Python3</a></li>
+<li><a href="https://pypi.org/project/numpy/">Numpy</a></li>
+<li><a href="https://pypi.org/project/scipy/">Scipy</a></li>
+<li><a href="https://pypi.org/project/pybind11/">pybind11</a> (if your environment supports C++11.)</li>
+<li><a href="http://eigen.tuxfamily.org/">Eigen3</a> (if your environment supports C++11.)</li>
+</ol>
+<h2 id="installation">Installation</h2>
+<p>If your environment supports C++11, you can install the python module implemented with C++ by following commands after installing Eigen3.<br>
+* Please replace the software version (&quot;1.0&quot; in this document) with an appropriate version.</p>
+<pre class="hljs"><code><div>$ pip3 install pybind11
+$ wget https://humet.sci.hokudai.ac.jp/~katsuyama/em-psvd/EM-PSVD-1.0.zip
+$ unzip EM-PSVD-1.0.zip
+$ cd EM-PSVD-1.0
+$ pip3 install . --user
+</div></code></pre>
+<p>C/C++ compiler can be optionally specified with the environment variables of <code>CC</code> and <code>CXX</code> as follow.</p>
+<pre class="hljs"><code><div>$ CC=/usr/local/bin/gcc CXX=/usr/local/bin/g++ pip3 install . --user 
+</div></code></pre>
+<p>* We have only tested with the C/C++ compiler of gcc (GCC) 4.9.4, so the source codes have not been confirmed to work with the other C/C++ compilers.</p>
+<p>If your environment does not support C++11, the python module implemented with pure python can be installed by following commands.</p>
+<pre class="hljs"><code><div>$ wget https://humet.sci.hokudai.ac.jp/~katsuyama/em-psvd/EM-PSVD-1.0.zip
+$ unzip EM-PSVD-1.0.zip
+$ cd EM-PSVD-1.0
+$ ENABLE_CXX=OFF pip3 install . --user
+</div></code></pre>
+<p>Or, you can use the module by simply putting <a href="python/pyempsvd.py">pyempsvd.py</a> in an install directory.</p>
+<h2 id="demonstration">Demonstration</h2>
+<p>A demonstration has been prepared in <a href="sample/python">sample/python</a>: <a href="sample/python/psvd.py">psvd.py</a> and <a href="sample/python/psvd_bin.py">psvd_bin.py</a> provides a demonstration for pure PSVD data and a demonstration for binned PSVD data, respectively. First, please go to the sample directory.</p>
+<pre class="hljs"><code><div>$ cd sample/python
+</div></code></pre>
+<p>Then, we explain the usage of class following the demonstrations.</p>
+<h3 id="a-case-for-pure-psvd-data">A case for pure PSVD data</h3>
+<p>Here is a case for fitting to pure PSVD data, included at <a href="sample/data/psvd.csv">sample/data/psvd.csv</a>. This sample data contains diameter (mm) and velocity (m/s) at first and second column, respectively. Therefore, the PSVD can be illustrated as follow.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+data = np.loadtxt(<span class="hljs-string">"../data/psvd.csv"</span>, delimiter=<span class="hljs-string">","</span>, dtype=float, comments=<span class="hljs-string">"#"</span>)
+plt.scatter(
+    data[:, <span class="hljs-number">0</span>], data[:, <span class="hljs-number">1</span>], c=<span class="hljs-string">"k"</span>, s=<span class="hljs-number">5</span>, marker=<span class="hljs-string">"."</span>
+)
+plt.xlim([<span class="hljs-number">0</span>, <span class="hljs-number">30</span>])
+plt.ylim([<span class="hljs-number">0</span>, <span class="hljs-number">5</span>])
+plt.xlabel(<span class="hljs-string">"Diameter (mm)"</span>)
+plt.ylabel(<span class="hljs-string">"Velocity (m/s)"</span>)
+plt.show()
+</div></code></pre>
+<img src="fig/psvd.png" />
+<p>To fit this PSVD data, a <code>EmpsvdCore</code> object is firstly constructed.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> pyempsvd <span class="hljs-keyword">import</span> EmpsvdCore
+em = EmpsvdCore(
+    <span class="hljs-number">2</span>, data[:, <span class="hljs-number">0</span>], data[:, <span class="hljs-number">1</span>]
+)
+</div></code></pre>
+<p>In this case, the object has been constructed with the number of PDF elements <code>K=2</code>, specified at the first argument. The second and third argument is respectively diameter and velocity of data. In this case, the initial parameters has been automatically generated using <code>EmpsvdCore.make_theta0</code>, a static method to generate an initial parameter set based on the PSVD data given.</p>
+<p>If you would like to specify an initial parameter set explicitly, you can use a keyword argument <code>theta0</code>.</p>
+<pre class="hljs"><code><div>theta0 = np.array([
+    <span class="hljs-comment"># omega, a, b, sigma2 (m^2 s^-2), mu+1, lambda (mm^-1) </span>
+    [<span class="hljs-number">0.5</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.04</span>, <span class="hljs-number">2.5</span>, <span class="hljs-number">0.1</span>],  <span class="hljs-comment"># 1st PDF element</span>
+    [<span class="hljs-number">0.5</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">0.8</span>, <span class="hljs-number">0.04</span>, <span class="hljs-number">2.5</span>, <span class="hljs-number">0.1</span>]   <span class="hljs-comment"># 2nd PDF element</span>
+])
+em = EmpsvdCore(
+    <span class="hljs-number">2</span>, data[:, <span class="hljs-number">0</span>], data[:, <span class="hljs-number">1</span>], theta0=theta0
+)
+</div></code></pre>
+<p><code>theta0</code> must be an numpy ndarray with a shape of (K, 6) containing parameters for each PDF element with an order of ω, a, b, σ2, μ+1, and λ.<br>
+As the other keyword arguments, the followings can be listed.</p>
+<ul>
+<li>tol: a tolerance parameter for the convergence judgement based on log-likelihood.</li>
+<li>max_iter: a maximum number of iteration in the fitting.</li>
+<li>fix_ab: parameters a and b are not updated from the initial state in the fitting if true.</li>
+<li>fix_alpha: a parameter μ is not updated from the initial state in the fitting if true.</li>
+</ul>
+<p>Once the EmpsvdCore object has been constructed, the fitting can be easily done by calling <code>fit</code> method.</p>
+<pre class="hljs"><code><div>em.fit()
+</div></code></pre>
+<p>If the fitting has been successfully done, the optimal parameters set can be obtained by <code>em.theta</code> as a numpy ndarray.</p>
+<pre class="hljs"><code><div>print(em.theta)
+<span class="hljs-comment"># [[0.68021269 0.94695267 0.15121241 0.07125975 0.97823976 0.3087228 ]</span>
+<span class="hljs-comment">#  [0.31978731 1.27793059 0.66705588 0.0727024  1.27689841 0.82836992]]</span>
+</div></code></pre>
+<p>Otherwise, <code>RuntimeError</code> will be raise. The shape and element order are same as <code>theta0</code>.<br>
+The fitting result can be illustrated as follow.</p>
+<pre class="hljs"><code><div>plt.scatter(
+    em.x, em.y, c=<span class="hljs-string">"k"</span>, s=<span class="hljs-number">5</span>, marker=<span class="hljs-string">"."</span>
+)
+x = np.linspace(<span class="hljs-number">0.01</span>, <span class="hljs-number">30</span>, <span class="hljs-number">100</span>)
+y = np.linspace(<span class="hljs-number">0.01</span>, <span class="hljs-number">5</span>, <span class="hljs-number">100</span>)
+xx, yy = np.meshgrid(x, y)
+plt.contour(
+    xx, yy, em.calc_pxy(xx, yy, em.theta).sum(axis=<span class="hljs-number">-1</span>), 
+    levels=[<span class="hljs-number">0.001</span>, <span class="hljs-number">0.01</span>, <span class="hljs-number">0.1</span>], colors=<span class="hljs-string">"r"</span>
+)
+plt.xlim([<span class="hljs-number">0</span>, <span class="hljs-number">30</span>])
+plt.ylim([<span class="hljs-number">0</span>, <span class="hljs-number">5</span>])
+plt.xlabel(<span class="hljs-string">"Diameter (mm)"</span>)
+plt.ylabel(<span class="hljs-string">"Velocity (m/s)"</span>)
+plt.show()
+</div></code></pre>
+<img src="fig/fitted_psvd.png" />
+<p>Here, <code>calc_pxy</code> method returns probability density of each PDF element corresponding to diameter (=<code>xx</code> in this case) and velocity (=<code>yy</code> in this case), so that we need to sum up the all PDF elements by <code>.sum(axis=-1)</code> in order to display the mixed PDF.</p>
+<h3 id="a-case-for-binned-psvd-data">A case for binned PSVD data</h3>
+<p>Next is a case for fitting to binned PSVD data, included at <a href="sample/data/psvd_bin.csv">sample/data/psvd_bin.csv</a>. This sample data contains a number of particles (at third column) for a bin of diameter (at first column) and velocity (at second column), converted from <a href="sample/data/psvd.csv">the pure PSVD data</a>. The number of bins is 100 for diameter axis and 60 for velocity axis. The PSVD can be illustrated as follow.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+<span class="hljs-keyword">from</span> matplotlib.colors <span class="hljs-keyword">import</span> ListedColormap, BoundaryNorm
+data = np.loadtxt(<span class="hljs-string">"../data/psvd_bin.csv"</span>, delimiter=<span class="hljs-string">","</span>, dtype=float, comments=<span class="hljs-string">"#"</span>)
+xx = data[:, <span class="hljs-number">0</span>].reshape(<span class="hljs-number">100</span>, <span class="hljs-number">60</span>)
+yy = data[:, <span class="hljs-number">1</span>].reshape(<span class="hljs-number">100</span>, <span class="hljs-number">60</span>)
+zz = data[:, <span class="hljs-number">2</span>].reshape(<span class="hljs-number">100</span>, <span class="hljs-number">60</span>)
+cmap = ListedColormap([[i/<span class="hljs-number">5</span>] * <span class="hljs-number">3</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">5</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>)])
+bounds = [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">10</span>]
+norm = BoundaryNorm(bounds, cmap.N)
+plt.pcolor(
+    xx, yy, zz, 
+    cmap=cmap, norm=norm
+)
+plt.colorbar()
+plt.xlim([<span class="hljs-number">0</span>, <span class="hljs-number">30</span>])
+plt.ylim([<span class="hljs-number">0</span>, <span class="hljs-number">5</span>])
+plt.xlabel(<span class="hljs-string">"Diameter (mm)"</span>)
+plt.ylabel(<span class="hljs-string">"Velocity (m/s)"</span>)
+plt.show()
+</div></code></pre>
+<img src="fig/psvd_bin.png" />
+<p>For this binned PSVD data, the fitting can be done as following code.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> pyempsvd <span class="hljs-keyword">import</span> EmpsvdCore
+mask = data[:, <span class="hljs-number">2</span>] &gt; <span class="hljs-number">0</span>
+em = EmpsvdCore(
+    <span class="hljs-number">2</span>, data[mask, <span class="hljs-number">0</span>], data[mask, <span class="hljs-number">1</span>], data[mask, <span class="hljs-number">2</span>]
+)
+em.fit()
+</div></code></pre>
+<p>Here, the EmpsvdCore object is constructed with the data where <code>z &gt; 0</code> in order to avoid the zero division error. The fitting result is then illustrated as follow.</p>
+<pre class="hljs"><code><div>xx = data[:, <span class="hljs-number">0</span>].reshape(<span class="hljs-number">100</span>, <span class="hljs-number">60</span>)
+yy = data[:, <span class="hljs-number">1</span>].reshape(<span class="hljs-number">100</span>, <span class="hljs-number">60</span>)
+zz = data[:, <span class="hljs-number">2</span>].reshape(<span class="hljs-number">100</span>, <span class="hljs-number">60</span>)
+cmap = ListedColormap([[i/<span class="hljs-number">5</span>] * <span class="hljs-number">3</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">5</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>)])
+bounds = [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">10</span>]
+norm = BoundaryNorm(bounds,cmap.N)
+plt.pcolor(
+    xx, yy, zz, 
+    cmap=cmap, norm=norm
+)
+plt.colorbar()
+x = np.linspace(<span class="hljs-number">0.01</span>, <span class="hljs-number">30</span>, <span class="hljs-number">100</span>)
+y = np.linspace(<span class="hljs-number">0.01</span>, <span class="hljs-number">5</span>, <span class="hljs-number">100</span>)
+xx, yy = np.meshgrid(x, y)
+plt.contour(xx, yy, em.calc_pxy(xx, yy, em.theta).sum(axis=<span class="hljs-number">-1</span>), levels=[<span class="hljs-number">0.001</span>, <span class="hljs-number">0.01</span>, <span class="hljs-number">0.1</span>], colors=<span class="hljs-string">"r"</span>)
+plt.xlim([<span class="hljs-number">0</span>, <span class="hljs-number">30</span>])
+plt.ylim([<span class="hljs-number">0</span>, <span class="hljs-number">5</span>])
+plt.xlabel(<span class="hljs-string">"Diameter (mm)"</span>)
+plt.ylabel(<span class="hljs-string">"Velocity (m/s)"</span>)
+plt.show()
+</div></code></pre>
+<img src="fig/fitted_psvd_bin.png" />
+<h1 id="for-c-users">For C++ users</h1>
+<h2 id="requirements">Requirements</h2>
+<p>The C++ class requires followings.</p>
+<ol>
+<li>C++11</li>
+<li><a href="http://eigen.tuxfamily.org/">Eigen3</a></li>
+</ol>
+<p>* We have only tested with the gcc (GCC) 4.9.4, so the source codes have not been confirmed to work with the other compilers.</p>
+<h2 id="demonstration">Demonstration</h2>
+<p>A demonstration has been prepared in <a href="sample/cpp">sample/cpp</a>: <a href="sample/cpp/psvd.cpp">psvd.cpp</a> and <a href="sample/cpp/psvd_bin.cpp">psvd_bin.cpp</a> provides a demonstration for pure PSVD data and a demonstration for binned PSVD data, respectively.</p>
+<pre class="hljs"><code><div>$ wget https://humet.sci.hokudai.ac.jp/~katsuyama/em-psvd/EM-PSVD-1.0.zip
+$ unzip EM-PSVD-1.0.zip
+$ cd EM-PSVD-1.0/sample/cpp
+</div></code></pre>
+<p>* Please replace the software version (&quot;1.0&quot; in this document) with an appropriate version.</p>
+<p>To compile the demonstrations, please modify <code>Makefile</code> following your environment and run <code>make pre</code> and <code>make</code> commands.</p>
+<pre class="hljs"><code><div>$ make pre
+$ make
+</div></code></pre>
+<p>Then, you can see the executable files, <code>psvd.exe</code> and <code>psvd_bin.exe</code>: <code>psvd.exe</code> is generated from <code>psvd.cpp</code> and <code>psvd_bin.exe</code> is generated from <code>psvd_bin.cpp</code>.<br>
+Executing <code>psvd.exe</code>, fitting results for a sample pure PSVD data, <a href="sample/data/psvd.csv">sample/data/psvd.csv</a>, will be displayed on your console.</p>
+<pre class="hljs"><code><div>$ ./psvd.exe
+---Initial States---
+omega   a     b     sigma2     alpha(mu+1)    lambda
+     0.5 0.303931        0 0.447839 0.786502 0.296983
+     0.5  1.87269        1 0.447839 0.786502 0.296983
+Loglikelihood: -3763.42
+AIC: -3775.42
+BIC: -3804.24
+---Fitting Result----
+omega   a     b     sigma2     alpha(mu+1)    lambda
+ 0.683394  0.946148  0.151896 0.0713072  0.973004  0.308272
+ 0.316606   1.27853  0.666832 0.0726836   1.28722  0.829519
+Loglikelihood: -2131.81
+AIC: -2143.81
+BIC: -2172.62
+Total iteration: 26
+</div></code></pre>
+<p>Similarly, executing <code>psvd_bin.exe</code>, fitting results for a sample binned PSVD data, <a href="sample/data/psvd_bin.csv">sample/data/psvd_bin.csv</a>, will be displayed on your console.</p>
+<pre class="hljs"><code><div>$ ./psvd_bin.exe
+---Initial States---
+omega   a     b     sigma2     alpha(mu+1)    lambda
+     0.5 0.304083        0 0.449144 0.795394 0.298584
+     0.5  1.85819        1 0.449144 0.795394 0.298584
+Loglikelihood: -3770.13
+AIC: -3782.13
+BIC: -3803.47
+---Fitting Result----
+omega   a     b     sigma2     alpha(mu+1)    lambda
+ 0.652302  0.945889  0.151165 0.0729722   1.12825  0.341661
+ 0.347698   1.26561  0.670277 0.0847078   1.32228  0.901791
+Loglikelihood: -2156.76
+AIC: -2168.76
+BIC: -2190.1
+Total iteration: 22
+</div></code></pre>
+<p>The usage of C++ class is mostly same as the python case.<br>
+First, construct <code>EmpsvdCore</code> object after diameter (=<code>x</code>) and velocity (=<code>y</code>) data is obtained.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> ROWS = <span class="hljs-number">900</span>;
+<span class="hljs-function"><span class="hljs-built_in">std</span>::ifstream <span class="hljs-title">ifs</span><span class="hljs-params">(<span class="hljs-string">"../data/psvd.csv"</span>)</span></span>;
+<span class="hljs-function">Eigen::ArrayXd <span class="hljs-title">x</span><span class="hljs-params">(ROWS)</span>, <span class="hljs-title">y</span><span class="hljs-params">(ROWS)</span></span>;
+Eigen::Index i = <span class="hljs-number">0</span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> buf, field;
+
+<span class="hljs-keyword">if</span> (!ifs.is_open()) {
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cerr</span> &lt;&lt; <span class="hljs-string">"No file is opened."</span> &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+<span class="hljs-built_in">std</span>::getline(ifs, buf);  <span class="hljs-comment">// skip header</span>
+<span class="hljs-keyword">while</span> (<span class="hljs-built_in">std</span>::getline(ifs, buf)) {
+    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">stringstream</span> <span class="hljs-title">ss</span><span class="hljs-params">(buf)</span></span>;
+    <span class="hljs-built_in">std</span>::getline(ss, field, <span class="hljs-string">','</span>); x(i) = <span class="hljs-built_in">std</span>::stod(field);
+    <span class="hljs-built_in">std</span>::getline(ss, field, <span class="hljs-string">','</span>); y(i) = <span class="hljs-built_in">std</span>::stod(field);
+    i++;		
+}
+
+<span class="hljs-function">Empsvd::EmpsvdCore <span class="hljs-title">em</span><span class="hljs-params">(<span class="hljs-number">2</span>, x, y)</span></span>;
+</div></code></pre>
+<p>The fitting can be easily conduct by calling <code>em.fit()</code>.</p>
+<pre class="hljs"><code><div>em.fit();
+</div></code></pre>
+<p>If the fitting has not been successfully done, <code>std::runtime_error</code> will be thrown. The fitting result can be contained in <code>em.theta</code> variable as well as the python case.</p>
+<p>If the PSVD data is binned data, the code is slightly modified.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> ROWS = <span class="hljs-number">100</span> * <span class="hljs-number">60</span>;
+<span class="hljs-function"><span class="hljs-built_in">std</span>::ifstream <span class="hljs-title">ifs</span><span class="hljs-params">(<span class="hljs-string">"../data/psvd_bin.csv"</span>)</span></span>;
+<span class="hljs-function">Eigen::ArrayXd <span class="hljs-title">x_in</span><span class="hljs-params">(ROWS)</span>, <span class="hljs-title">y_in</span><span class="hljs-params">(ROWS)</span>, <span class="hljs-title">z_in</span><span class="hljs-params">(ROWS)</span></span>;
+Eigen::Index i = <span class="hljs-number">0</span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> buf, field;
+
+<span class="hljs-keyword">if</span> (!ifs.is_open()) {
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cerr</span> &lt;&lt; <span class="hljs-string">"No file is opened."</span> &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+<span class="hljs-built_in">std</span>::getline(ifs, buf);  <span class="hljs-comment">// skip header</span>
+<span class="hljs-keyword">while</span> (<span class="hljs-built_in">std</span>::getline(ifs, buf)) {
+    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">stringstream</span> <span class="hljs-title">ss</span><span class="hljs-params">(buf)</span></span>;
+    <span class="hljs-built_in">std</span>::getline(ss, field, <span class="hljs-string">','</span>); x_in(i) = <span class="hljs-built_in">std</span>::stod(field);
+    <span class="hljs-built_in">std</span>::getline(ss, field, <span class="hljs-string">','</span>); y_in(i) = <span class="hljs-built_in">std</span>::stod(field);
+    <span class="hljs-built_in">std</span>::getline(ss, field, <span class="hljs-string">','</span>); z_in(i) = <span class="hljs-built_in">std</span>::stod(field);
+    i++;
+}
+
+<span class="hljs-comment">// extract elements where z &gt; 0</span>
+Eigen::ArrayXd exist_data = (z_in.<span class="hljs-built_in">array</span>() &gt; <span class="hljs-number">0.</span>).select(					     
+    Eigen::ArrayXd::Constant(z_in.size(), <span class="hljs-number">1</span>),
+    Eigen::ArrayXd::Constant(z_in.size(), <span class="hljs-number">0</span>)
+);
+<span class="hljs-keyword">size_t</span> n = exist_data.count();
+<span class="hljs-function">Eigen::ArrayXd <span class="hljs-title">x</span><span class="hljs-params">(n)</span>, <span class="hljs-title">y</span><span class="hljs-params">(n)</span>, <span class="hljs-title">z</span><span class="hljs-params">(n)</span></span>;
+Eigen::Index j = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; x_in.size(); i++) {
+        <span class="hljs-keyword">if</span> (exist_data(i)) {
+            x(j) = x_in(i);
+        y(j) = y_in(i);
+        z(j) = z_in(i);
+        j++;
+        }
+}
+
+<span class="hljs-function">Empsvd::EmpsvdCore <span class="hljs-title">em</span><span class="hljs-params">(<span class="hljs-number">2</span>, x, y, z)</span></span>;
+em.fit();
+</div></code></pre>
+<p>Please note that the elements where <code>z=0</code> should be removed in advance to construct <code>EmpsvdCore</code> object in order to avoid the zero division error.</p>
+<h1 id="for-fortran-uesrs">For fortran uesrs</h1>
+<h2 id="requirements">Requirements</h2>
+<p>The fortran module works under the standard fortran environment, fotran90/95. No special library is requred.<br>
+*  We have only tested with the GNU Fortran (GCC) 4.4.7, so the source codes have not been confirmed to work with the other compilers.</p>
+<h2 id="demonstration">Demonstration</h2>
+<p>A demonstration has been prepared in <a href="sample/fortran">sample/fortran</a>: <a href="sample/fortran/psvd.f90">psvd.f90</a> and <a href="sample/fortran/psvd_bin.f90">psvd_bin.f90</a> provides a demonstration for pure PSVD data and a demonstration for binned PSVD data, respectively.</p>
+<pre class="hljs"><code><div>$ wget https://humet.sci.hokudai.ac.jp/~katsuyama/em-psvd/EM-PSVD-1.0.zip
+$ unzip EM-PSVD-1.0.zip
+$ cd EM-PSVD-1.0/sample/fortran
+</div></code></pre>
+<p>* Please replace the software version (&quot;1.0&quot; in this document) with an appropriate version.</p>
+<p>To compile the demonstrations, please modify <code>Makefile</code> following your environment and run <code>make pre</code> and <code>make</code> commands.</p>
+<pre class="hljs"><code><div>$ make pre
+$ make
+</div></code></pre>
+<p>Then, you can see the executable files, <code>psvd.exe</code> and <code>psvd_bin.exe</code>: <code>psvd.exe</code> is generated from <code>psvd.cpp</code> and <code>psvd_bin.exe</code> is generated from <code>psvd_bin.cpp</code>.<br>
+Executing <code>psvd.exe</code>, fitting results for a sample pure PSVD data, <a href="sample/data/psvd.csv">sample/data/psvd.csv</a>, will be displayed on your console.</p>
+<pre class="hljs"><code><div>$ ./psvd.exe
+----initial condition----
+                    omega              a              b         sigma2    alpha(mu+1)         lambda
+theta(1)=(        0.50000        0.30393        0.00000        0.44784        0.78650        0.29698)
+theta(2)=(        0.50000        1.87269        1.00000        0.44784        0.78650        0.29698)
+log-likelihood:     -3763.42345
+           aic:     -3775.42345
+           bic:     -3804.23782
+----Fitting result----
+                    omega              a              b         sigma2    alpha(mu+1)         lambda
+theta(1)=(        0.68339        0.94615        0.15190        0.07131        0.97300        0.30827)
+theta(2)=(        0.31661        1.27853        0.66683        0.07268        1.28722        0.82952)
+number of iteration: 25
+log-likelihood:     -2131.81060
+           aic:     -2143.81060
+           bic:     -2172.62497
+</div></code></pre>
+<p>Similarly, executing <code>psvd_bin.exe</code>, fitting results for a sample binned PSVD data, <a href="sample/data/psvd_bin.csv">sample/data/psvd_bin.csv</a>, will be displayed on your console.</p>
+<pre class="hljs"><code><div>$ ./psvd_bin.exe
+----initial condition----
+                    omega              a              b         sigma2    alpha(mu+1)         lambda
+theta(1)=(        0.50000        0.30408        0.00000        0.44914        0.79539        0.29858)
+theta(2)=(        0.50000        1.85819        1.00000        0.44914        0.79539        0.29858)
+log-likelihood:     -3770.12933
+           aic:     -3782.12933
+           bic:     -3803.47030
+----Fitting result----
+                    omega              a              b         sigma2    alpha(mu+1)         lambda
+theta(1)=(        0.65230        0.94589        0.15117        0.07297        1.12825        0.34166)
+theta(2)=(        0.34770        1.26561        0.67028        0.08471        1.32228        0.90179)
+number of iteration: 21
+log-likelihood:     -2156.75916
+           aic:     -2168.75916
+           bic:     -2190.10013
+</div></code></pre>
+<p>The usage of fortran module is mostly same as the python and C++ cases. First, please initialize the module by calling <code>init</code> subroutine after diameter (=<code>x</code>) and velocity (=<code>y</code>) data is obtained.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">use</span> empsvd_core, <span class="hljs-keyword">only</span>: init, fit, theta
+<span class="hljs-keyword">implicit</span> <span class="hljs-keyword">none</span>
+<span class="hljs-keyword">integer</span>(<span class="hljs-number">8</span>), <span class="hljs-keyword">parameter</span> :: N=<span class="hljs-number">900</span>, K=<span class="hljs-number">2</span>
+<span class="hljs-keyword">real</span>(<span class="hljs-number">8</span>) :: x(N), y(N), r
+<span class="hljs-keyword">integer</span>(<span class="hljs-number">8</span>) :: i, info
+
+<span class="hljs-comment">! read PSVD data</span>
+open(<span class="hljs-number">10</span>, <span class="hljs-keyword">file</span>=<span class="hljs-string">"../data/psvd.csv"</span>, <span class="hljs-keyword">status</span>=<span class="hljs-string">"old"</span>)
+read(<span class="hljs-number">10</span>, *)  <span class="hljs-comment">! skip header</span>
+<span class="hljs-keyword">do</span> i = <span class="hljs-number">1</span>, N
+    read(<span class="hljs-number">10</span>, *) x(i), y(i)
+<span class="hljs-keyword">end</span> <span class="hljs-keyword">do</span>
+close(<span class="hljs-number">10</span>)
+
+<span class="hljs-comment">! initialize the module</span>
+<span class="hljs-keyword">call</span> init(K, x, y)
+</div></code></pre>
+<p>The fitting can be easily done by calling <code>fit</code> function.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">call</span> fit(info)
+</div></code></pre>
+<p>If the fitting has been successfully done, <code>info</code> will be <code>0</code>. The fitting result is contained in <code>theta</code> variable as well as python and C++ cases.</p>
+<p>For the binned PSVD data, the code is slightly modified.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">use</span> empsvd_core, <span class="hljs-keyword">only</span>: init, fit, theta
+<span class="hljs-keyword">implicit</span> <span class="hljs-keyword">none</span>
+<span class="hljs-keyword">integer</span>(<span class="hljs-number">8</span>), <span class="hljs-keyword">parameter</span> :: N=<span class="hljs-number">100</span> * <span class="hljs-number">60</span>, K=<span class="hljs-number">2</span>
+<span class="hljs-keyword">real</span>(<span class="hljs-number">8</span>) :: x_in(N), y_in(N), z_in(N)
+<span class="hljs-keyword">real</span>(<span class="hljs-number">8</span>), <span class="hljs-keyword">allocatable</span> :: x(:), y(:), z(:)
+<span class="hljs-keyword">integer</span>(<span class="hljs-number">8</span>) :: i, info, L
+
+open(<span class="hljs-number">10</span>, <span class="hljs-keyword">file</span>=<span class="hljs-string">"../data/psvd_bin.csv"</span>, <span class="hljs-keyword">status</span>=<span class="hljs-string">"old"</span>)
+read(<span class="hljs-number">10</span>, *)  <span class="hljs-comment">! skip header</span>
+<span class="hljs-keyword">do</span> i = <span class="hljs-number">1</span>, N
+    read(<span class="hljs-number">10</span>, *) x_in(i), y_in(i), z_in(i)
+<span class="hljs-keyword">end</span> <span class="hljs-keyword">do</span>
+close(<span class="hljs-number">10</span>)
+
+<span class="hljs-comment">! extract elements where z &gt; 0</span>
+L = <span class="hljs-built_in">count</span>( z_in &gt; <span class="hljs-number">0.</span> )
+<span class="hljs-built_in">allocate</span>( x(L) )
+<span class="hljs-built_in">allocate</span>( y(L) )
+<span class="hljs-built_in">allocate</span>( z(L) )
+x = <span class="hljs-built_in">pack</span>( x_in, z_in &gt; <span class="hljs-number">0.</span> )
+y = <span class="hljs-built_in">pack</span>( y_in, z_in &gt; <span class="hljs-number">0.</span> )
+z = <span class="hljs-built_in">pack</span>( z_in, z_in &gt; <span class="hljs-number">0.</span> )
+
+<span class="hljs-keyword">call</span> init(K, x, y, z)
+<span class="hljs-keyword">call</span> fit(info)
+</div></code></pre>
+<p>Please note that the elements where <code>z=0</code> should be removed before calling <code>init</code> in order to avoid the zero division error.</p>
+
+</body>
+</html>
