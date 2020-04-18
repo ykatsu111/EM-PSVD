@@ -1,3 +1,9 @@
+/*
+EM-PSVD
+(C) Y. Katsuyama (2020)
+See https://humet.sci.hokudai.ac.jp/~meteo/product-e.html
+*/
+
 #include "EmpsvdCore.h"
 #include <Eigen/Dense>
 #include <cmath>

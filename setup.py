@@ -1,12 +1,23 @@
+"""
+EM-PSVD
+(C) Y. Katsuyama (2020)
+See https://humet.sci.hokudai.ac.jp/~meteo/product-e.html
+"""
+
+
 from setuptools import setup
 import setuptools
 import os
 
 
-__version__ = "0.1"
-__author__ = "ykatsu111"
+__version__ = "1.0"
+__author__ = "Y. Katsuyama"
 __description__ = "A fitting algorithm for PSVD data with the EM algorithm."
-__long_description__ = ""
+__long_description__ = """
+EM-PSVD
+(C) Y. Katsuyama (2020)
+See https://humet.sci.hokudai.ac.jp/~meteo/product-e.html
+"""
 
 
 if "ENABLE_CXX" in os.environ and os.environ["ENABLE_CXX"] == "OFF":
@@ -37,7 +48,7 @@ else:
                 pybind11.get_include(True)
             ],
             language="c++",
-            requires=["pybind11"],
+            requires=["numpy", "pybind11"],
             extra_compile_args=["-std=c++11"]
         )
     ]

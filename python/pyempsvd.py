@@ -1,3 +1,9 @@
+"""
+EM-PSVD
+(C) Y. Katsuyama (2020)
+See https://humet.sci.hokudai.ac.jp/~meteo/product-e.html
+"""
+
 from typing import Tuple, List, Union, Callable, Any, AnyStr, Optional, Iterable, Dict
 from numpy import ndarray
 

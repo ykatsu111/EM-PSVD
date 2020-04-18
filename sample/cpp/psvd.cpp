@@ -1,3 +1,9 @@
+/*
+EM-PSVD
+(C) Y. Katsuyama (2020)
+See https://humet.sci.hokudai.ac.jp/~meteo/product-e.html
+*/
+
 #include "EmpsvdCore.h"
 #include <fstream>
 #include <sstream>
@@ -5,7 +11,6 @@
 #include <iostream>
 #include <Eigen/Dense>
 
-constexpr int COLUMNS = 2;
 constexpr int ROWS = 900;
 
 int main() {

@@ -1,3 +1,7 @@
+! EM-PSVD
+! (C) Y. Katsuyama (2020)
+! See https://humet.sci.hokudai.ac.jp/~meteo/product-e.html
+
 program main
   use empsvd_core, only: init, fit, theta, M, niter, get_loglikelihood, get_aic, get_bic
   implicit none
