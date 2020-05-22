@@ -241,21 +241,36 @@ class EmpsvdCore:
         log_pxy = self._get_log_pxy(theta=theta)
         max_log_pxy = np.max(log_pxy, axis=1)
         for j in range(self.k):
-            log_pxy[:, j] -= max_log_pxy
-
-        return np.log(
-            np.sum(np.exp(log_pxy), axis=1)
-        ) + max_log_pxy
+            msk = np.isinf(log_pxy[:, j])
+            log_pxy[~msk, j] -= max_log_pxy[~msk]
+            
+        sum_log_pxy = np.sum(np.exp(log_pxy), axis=1)
+        ret = max_log_pxy
+        msk = sum_log_pxy > 0
+        ret[msk] += np.log(sum_log_pxy[msk])
+        ret[~msk] = -np.inf
+        return ret
 
     def _get_sum_pxy(self, theta=None) -> ndarray:
         import numpy as np
         return np.exp(self._get_logsum_pxy(theta=theta))
 
     def _get_gamma(self, theta=None) -> ndarray:
+        import numpy as np
+        import warnings
+        
         gma = self._get_pxy(theta=theta)
         sum_pxy = self._get_sum_pxy(theta=theta)
         for j in range(self.k):
-            gma[:, j] /= sum_pxy
+            msk = sum_pxy > 0
+            gma[msk, j] /= sum_pxy[msk]
+            gma[~msk, j] = np.nan
+            
+        if np.sum(np.isnan(gma)) > 0:
+            warnings.warn(
+                "gamma has some nan value probably due to small likelihood. This will result an error.",
+                RuntimeWarning
+            )
         return gma
 
     def _get_new_omegak(self, ik: int) -> float:

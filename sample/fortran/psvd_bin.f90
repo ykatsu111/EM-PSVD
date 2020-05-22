@@ -30,6 +30,7 @@ program main
   ! print initial condition
   call init(K, x, y, z, max_iter=max_iter, tol=1d-5)
   write(*, "(A)") "----initial condition----"
+  write(*, "(A)") "                    omega              a              b         sigma2    alpha(mu+1)         lambda"
   do i = 1, K
      write(*, "(A,I0,A,6F15.5,A)") "theta(", i, ")=(", theta(i, :), ")"
   end do
@@ -49,6 +50,7 @@ program main
 
   ! print result
   write(*, "(A)") "----Fitting result----"
+  write(*, "(A)") "                    omega              a              b         sigma2    alpha(mu+1)         lambda"
   do i = 1, K
      write(*, "(A,I0,A,6F15.5,A)") "theta(", i, ")=(", theta(i, :), ")"
   end do
