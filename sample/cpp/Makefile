@@ -1,6 +1,6 @@
 CXX = g++
 INCEigen3 = /usr/local/include/eigen3
-FLAGS = -O0 -std=c++11 -I${INCEigen3} -I./src
+FLAGS = -O3 -std=c++11 -I${INCEigen3} -I./src
 TARGET = psvd.exe psvd_bin.exe
 SRC = psvd.cpp psvd_bin.cpp EmpsvdCore.cpp
 OBJ = ${SRC:.cpp=.o}

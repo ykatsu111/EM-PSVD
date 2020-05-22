@@ -1,5 +1,5 @@
 FC = gfortran
-FLAGS = -O3 -Wall # -ffpe-trap=invalid,zero,overflow,underflow
+FLAGS = -O3
 TARGET = psvd.exe psvd_bin.exe
 SRC = empsvd_static.f90 empsvd_core.f90 psvd.f90 psvd_bin.f90
 OBJ    = ${SRC:.f90=.o}

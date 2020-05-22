@@ -39,9 +39,9 @@ If your environment supports C++11, you can install the python module implemente
 
 ```
 $ pip3 install pybind11
-$ wget https://humet.sci.hokudai.ac.jp/~y_katsu/em-psvd/EM-PSVD.1.0.zip
-$ unzip EM-PSVD.1.0.zip
-$ cd EM-PSVD
+$ wget https://humet.sci.hokudai.ac.jp/~katsuyama/em-psvd/EM-PSVD-1.0.zip
+$ unzip EM-PSVD-1.0.zip
+$ cd EM-PSVD-1.0
 $ pip3 install . --user
 ```
 
@@ -51,14 +51,14 @@ C/C++ compiler can be optionally specified with the environment variables of `CC
 $ CC=/usr/local/bin/gcc CXX=/usr/local/bin/g++ pip3 install . --user 
 ```
 
-\* We have only tested with the C/C++ compiler of gcc (GCC) 4.9.4, so any other C/C++ compilers are not guaranteed to work.
+\* We have only tested with the C/C++ compiler of gcc (GCC) 4.9.4, so the source codes have not been confirmed to work with the other C/C++ compilers.
 
 If your environment does not support C++11, the python module implemented with pure python can be installed by following commands.
 
 ```
-$ wget https://humet.sci.hokudai.ac.jp/~y_katsu/em-psvd/EM-PSVD.1.0.zip
-$ unzip EM-PSVD.1.0.zip
-$ cd EM-PSVD
+$ wget https://humet.sci.hokudai.ac.jp/~katsuyama/em-psvd/EM-PSVD-1.0.zip
+$ unzip EM-PSVD-1.0.zip
+$ cd EM-PSVD-1.0
 $ ENABLE_CXX=OFF pip3 install . --user
 ```
 
@@ -124,8 +124,8 @@ As the other keyword arguments, the followings can be listed.
 
 * tol: a tolerance parameter for the convergence judgement based on log-likelihood.
 * max_iter: a maximum number of iteration in the fitting.
-* fix_ab: fix parameters a and b at the initial state in the fitting.
-* fix_alpha: fix a parameter μ at the initial state in the fitting.
+* fix_ab: parameters a and b are not updated from the initial state in the fitting if true.
+* fix_alpha: a parameter μ is not updated from the initial state in the fitting if true.
 
 Once the EmpsvdCore object has been constructed, the fitting can be easily done by calling `fit` method.
 
@@ -242,15 +242,19 @@ The C++ class requires followings.
 1. C++11
 2. [Eigen3](http://eigen.tuxfamily.org/)
 
-\* We have only tested with the gcc (GCC) 4.9.4, so any other compilers are not guaranteed to work.
+\* We have only tested with the gcc (GCC) 4.9.4, so the source codes have not been confirmed to work with the other compilers.
 
 ## Demonstration
 
 A demonstration has been prepared in [sample/cpp](sample/cpp): [psvd.cpp](sample/cpp/psvd.cpp) and [psvd_bin.cpp](sample/cpp/psvd_bin.cpp) provides a demonstration for pure PSVD data and a demonstration for binned PSVD data, respectively.
 
 ```
-$ cd sample/cpp
+$ wget https://humet.sci.hokudai.ac.jp/~katsuyama/em-psvd/EM-PSVD-1.0.zip
+$ unzip EM-PSVD-1.0.zip
+$ cd EM-PSVD-1.0/sample/cpp
 ```
+
+\* Please replace the software version ("1.0" in this document) with an appropriate version.
 
 To compile the demonstrations, please modify `Makefile` following your environment and run `make pre` and `make` commands.
 
@@ -259,7 +263,8 @@ $ make pre
 $ make
 ```
 
-Then, you can see the executable files, `psvd.exe` and `psvd_bin.exe`: `psvd.exe` is generated from `psvd.cpp` and `psvd_bin.exe` is generated from `psvd_bin.cpp`. Executing these files, fitting results will be displayed on your console.
+Then, you can see the executable files, `psvd.exe` and `psvd_bin.exe`: `psvd.exe` is generated from `psvd.cpp` and `psvd_bin.exe` is generated from `psvd_bin.cpp`.  
+Executing `psvd.exe`, fitting results for a sample pure PSVD data, [sample/data/psvd.csv](sample/data/psvd.csv), will be displayed on your console.
 
 ```
 $ ./psvd.exe
@@ -279,6 +284,8 @@ AIC: -2143.81
 BIC: -2172.62
 Total iteration: 26
 ```
+
+Similarly, executing `psvd_bin.exe`, fitting results for a sample binned PSVD data, [sample/data/psvd_bin.csv](sample/data/psvd_bin.csv), will be displayed on your console.
 
 ```
 $ ./psvd_bin.exe
@@ -382,15 +389,19 @@ Please note that the elements where `z=0` should be removed in advance to constr
 ## Requirements
 
 The fortran module works under the standard fortran environment, fotran90/95. No special library is requred.  
-\*  We have only tested with the GNU Fortran (GCC) 4.4.7, so any other compilers are not guaranteed to work.
+\*  We have only tested with the GNU Fortran (GCC) 4.4.7, so the source codes have not been confirmed to work with the other compilers.
 
 ## Demonstration
 
 A demonstration has been prepared in [sample/fortran](sample/fortran): [psvd.f90](sample/fortran/psvd.f90) and [psvd_bin.f90](sample/fortran/psvd_bin.f90) provides a demonstration for pure PSVD data and a demonstration for binned PSVD data, respectively.
 
 ```
-$ cd sample/fortran
+$ wget https://humet.sci.hokudai.ac.jp/~katsuyama/em-psvd/EM-PSVD-1.0.zip
+$ unzip EM-PSVD-1.0.zip
+$ cd EM-PSVD-1.0/sample/fortran
 ```
+
+\* Please replace the software version ("1.0" in this document) with an appropriate version.
 
 To compile the demonstrations, please modify `Makefile` following your environment and run `make pre` and `make` commands.
 
@@ -399,35 +410,41 @@ $ make pre
 $ make
 ```
 
-Then, you can see the executable files, `psvd.exe` and `psvd_bin.exe`: `psvd.exe` is generated from `psvd.cpp` and `psvd_bin.exe` is generated from `psvd_bin.cpp`. Executing these files, fitting results will be displayed on your console.
+Then, you can see the executable files, `psvd.exe` and `psvd_bin.exe`: `psvd.exe` is generated from `psvd.cpp` and `psvd_bin.exe` is generated from `psvd_bin.cpp`.  
+Executing `psvd.exe`, fitting results for a sample pure PSVD data, [sample/data/psvd.csv](sample/data/psvd.csv), will be displayed on your console.
 
 ```
 $ ./psvd.exe
 ----initial condition----
+                    omega              a              b         sigma2    alpha(mu+1)         lambda
 theta(1)=(        0.50000        0.30393        0.00000        0.44784        0.78650        0.29698)
 theta(2)=(        0.50000        1.87269        1.00000        0.44784        0.78650        0.29698)
 log-likelihood:     -3763.42345
            aic:     -3775.42345
            bic:     -3804.23782
 ----Fitting result----
+                    omega              a              b         sigma2    alpha(mu+1)         lambda
 theta(1)=(        0.68339        0.94615        0.15190        0.07131        0.97300        0.30827)
 theta(2)=(        0.31661        1.27853        0.66683        0.07268        1.28722        0.82952)
 number of iteration: 25
 log-likelihood:     -2131.81060
            aic:     -2143.81060
            bic:     -2172.62497
-
 ```
+
+Similarly, executing `psvd_bin.exe`, fitting results for a sample binned PSVD data, [sample/data/psvd_bin.csv](sample/data/psvd_bin.csv), will be displayed on your console.
 
 ```
 $ ./psvd_bin.exe
 ----initial condition----
+                    omega              a              b         sigma2    alpha(mu+1)         lambda
 theta(1)=(        0.50000        0.30408        0.00000        0.44914        0.79539        0.29858)
 theta(2)=(        0.50000        1.85819        1.00000        0.44914        0.79539        0.29858)
 log-likelihood:     -3770.12933
            aic:     -3782.12933
            bic:     -3803.47030
 ----Fitting result----
+                    omega              a              b         sigma2    alpha(mu+1)         lambda
 theta(1)=(        0.65230        0.94589        0.15117        0.07297        1.12825        0.34166)
 theta(2)=(        0.34770        1.26561        0.67028        0.08471        1.32228        0.90179)
 number of iteration: 21
