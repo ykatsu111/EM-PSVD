@@ -35,7 +35,7 @@ if "ENABLE_CXX" in os.environ and os.environ["ENABLE_CXX"] == "OFF":
 
 else:
 
-    from setuptools import Extension
+    from setuptools import Extension, find_packages
     from setuptools.command.build_ext import build_ext
     import pybind11
 
@@ -60,5 +60,6 @@ else:
         description=__description__,
         long_description=__long_description__,
         ext_modules=ext_modules,
+        packages=find_packages(),
         cmdclass={"build_ext": build_ext}
     )
