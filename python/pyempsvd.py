@@ -260,7 +260,7 @@ class EmpsvdCore:
 
     def _get_new_omegak(self, ik: int) -> float:
         import numpy as np
-        return np.sum(self.gamma[:, ik]) / self._z.sum()
+        return np.sum(self._z * self.gamma[:, ik]) / self._z.sum()
 
     def _get_new_ak(self, ik: int, new_bk: float) -> float:
         import numpy as np
@@ -316,6 +316,8 @@ class EmpsvdCore:
         # qalk0 = (1. + np.sqrt(1. + (4. * y / 3.))) / (4. * y)
         
         for i in range(max_iter):
+            if qalk0 > 1e10:
+                raise RuntimeError(f"qalk0 (={qalk0}) is too big!")
             dig = digamma(qalk0)
             qalk1 = qalk0 * (np.log(qalk0) - dig) / y
             if abs(qalk1 - qalk0) < tol:

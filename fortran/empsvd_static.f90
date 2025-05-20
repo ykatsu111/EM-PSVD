@@ -244,6 +244,11 @@ contains
     ! alk0 = exp(y) + 0.5d0
 
     do i = 1, max_iter
+       if (alk0 > 1d10) then
+         info = 4
+         new_alk = alk0
+         return
+       end if
        call digamma(alk0, dig)
        alk1 = alk0 * ((log(alk0) - dig) / y)
        ! call trigamma(alk0, trig, n=100)

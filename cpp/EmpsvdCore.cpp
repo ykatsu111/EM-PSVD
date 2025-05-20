@@ -387,6 +387,7 @@ double Empsvd::EmpsvdCore::get_new_alphak_by_invdigamma(Eigen::Index ik, double 
 	double dig, alphak1;
 	
 	for (int i = 0; i < max_iter; i++) {
+		if (alphak0 > 1e10) throw std::runtime_error("alphak0 is too big!");  // digammad() with big alphak0 causes big loop.
 		dig = this->digammad(alphak0);
 		alphak1 = alphak0 * (std::log(alphak0) - dig) / y;
 		if (std::abs(alphak1 - alphak0) < tol) return alphak1;

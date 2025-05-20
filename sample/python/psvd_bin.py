@@ -12,8 +12,10 @@ from pyempsvd import EmpsvdCore
 dat = np.loadtxt("../data/psvd_bin.csv", delimiter=",", dtype=float, comments="#")
 mask = dat[:, 2] > 0
 em = EmpsvdCore(
-    2, dat[mask, 0], dat[mask, 1], dat[mask, 2]
+    2, dat[mask, 0], dat[mask, 1], z=dat[mask, 2]
 )
+print("----Initial states----")
+print(em.theta)
 em.fit()
 print("----Fitting result----")
 print(em.theta)
